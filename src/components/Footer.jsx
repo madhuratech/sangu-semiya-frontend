@@ -1,22 +1,22 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import logo from '../assets/Sangu-Brand-Semiya-Logo.png';
 import { FiMapPin, FiPhone, FiMail, FiMessageCircle } from 'react-icons/fi';
 
 const Footer = () => {
-  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCategories = async () => {
       try {
-        const res = await axios.get('https://sangu-semiya-backend-bq1f.onrender.com/api/products');
-        setProducts(res.data);
+        const res = await api.get('/categories');
+        setCategories(res.data);
       } catch (err) {
-        console.error('Error fetching products for footer', err);
+        console.error('Error fetching categories for footer', err);
       }
     };
-    fetchProducts();
+    fetchCategories();
   }, []);
 
   return (
@@ -65,21 +65,21 @@ const Footer = () => {
 
           {/* Column 2 — Categories */}
           <div>
-            <h3 className="text-base font-medium mb-4 border-b border-red-400 pb-2">Products</h3>
+            <h3 className="text-base font-medium mb-4 border-b border-red-400 pb-2">Categories</h3>
             <ul className="space-y-2">
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <li key={product._id || product.id}>
+              {categories.length > 0 ? (
+                categories.slice(0, 6).map((cat) => (
+                  <li key={cat._id || cat.id}>
                     <Link
-                      to={`/product/${product.name}`}
+                      to="/categories"
                       className="text-sm text-red-100 hover:text-white transition-colors duration-200"
                     >
-                      {product.name}
+                      {cat.name}
                     </Link>
                   </li>
                 ))
               ) : (
-                <li className="text-sm text-red-300 italic">Exploring flavors...</li>
+                <li className="text-sm text-red-300 italic">Exploring collections...</li>
               )}
             </ul>
           </div>

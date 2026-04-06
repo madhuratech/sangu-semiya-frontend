@@ -6,6 +6,7 @@ import CMSManager from './components/CMSManager';
 import AdminManager from './components/AdminManager';
 import RecipeManager from './components/RecipeManager';
 import BlogManager from './components/BlogManager';
+import CategoryManager from './components/CategoryManager';
 import api from '../../utils/api';
 
 const Dashboard = () => {
@@ -72,6 +73,9 @@ const Dashboard = () => {
           </button>
           <button onClick={() => setActiveTab('products')} className={`w-full text-left px-3 py-2 rounded-lg font-normal transition-all flex items-center ${activeTab === 'products' ? 'bg-primary text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}>
              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg> Products
+          </button>
+          <button onClick={() => setActiveTab('categories')} className={`w-full text-left px-3 py-2 rounded-lg font-normal transition-all flex items-center ${activeTab === 'categories' ? 'bg-primary text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}>
+             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0h10"/></svg> Categories
           </button>
           <button onClick={() => setActiveTab('blogs')} className={`w-full text-left px-3 py-2 rounded-lg font-normal transition-all flex items-center ${activeTab === 'blogs' ? 'bg-primary text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}>
              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg> Blogs
@@ -147,6 +151,7 @@ const Dashboard = () => {
           )}
           
           {activeTab === 'products' && <div className="animate-fade-in"><ProductManager /></div>}
+          {activeTab === 'categories' && <div className="animate-fade-in"><CategoryManager /></div>}
           {activeTab === 'blogs' && <div className="animate-fade-in"><BlogManager /></div>}
           {activeTab === 'enquiries' && <div className="animate-fade-in"><EnquiryManager /></div>}
           {activeTab === 'cms' && <div className="animate-fade-in"><CMSManager /></div>}

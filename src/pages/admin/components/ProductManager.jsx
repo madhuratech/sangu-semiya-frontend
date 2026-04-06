@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import api from '../../../utils/api';
 import ProductModal from './ProductModal';
+import ProductPreviewModal from './ProductPreviewModal';
 import { ImportModal, ExportModal } from './ImportExportModals';
 import StatusPopup from './StatusPopup';
 import ConfirmPopup from './ConfirmPopup';
+import { FiEye, FiEdit3, FiTrash2 } from 'react-icons/fi';
 
 
 const ProductManager = () => {
@@ -14,9 +16,11 @@ const ProductManager = () => {
   
   // Modal States
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [previewingProduct, setPreviewingProduct] = useState(null);
 
   // Status Notification State
   const [status, setStatus] = useState({ isOpen: false, message: '', type: 'success' });
@@ -56,7 +60,8 @@ const ProductManager = () => {
     setStatus({ isOpen: true, message, type });
   };
 
-  const openDeleteConfirm = (id) => {
+  const openDeleteConfirm = (id, e) => {
+    if (e) e.stopPropagation();
     setConfirm({ isOpen: true, productId: id });
   };
 
@@ -72,9 +77,16 @@ const ProductManager = () => {
   };
 
 
-  const handleEdit = (product) => {
+  const handleEdit = (product, e) => {
+    if (e) e.stopPropagation();
     setEditingProduct(product);
     setIsProductModalOpen(true);
+  };
+
+  const handlePreview = (product, e) => {
+    if (e) e.stopPropagation();
+    setPreviewingProduct(product);
+    setIsPreviewModalOpen(true);
   };
 
   const openNewProduct = () => {
@@ -130,8 +142,12 @@ const ProductManager = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50 text-sm">
-              {filteredProducts.map(p => (
-                <tr key={p.id || p._id || Math.random()} className="hover:bg-slate-50/30 transition duration-300 group">
+               {filteredProducts.map(p => (
+                <tr 
+                  key={p.id || p._id || Math.random()} 
+                  onClick={() => handleEdit(p)}
+                  className="hover:bg-slate-50/50 transition duration-300 group cursor-pointer"
+                >
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center">
@@ -161,14 +177,29 @@ const ProductManager = () => {
                       {p.status || 'Active'}
                     </span>
                   </td>
-                  <td className="px-8 py-5 text-right">
+                   <td className="px-8 py-5 text-right">
                     <div className="flex justify-end gap-3 text-slate-300">
-                       <button onClick={() => handleEdit(p)} className="hover:text-blue-500 transition-colors">
-                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                       <button 
+                         onClick={(e) => handlePreview(p, e)} 
+                         className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-blue-50 hover:text-blue-500 transition-all border border-transparent hover:border-blue-100"
+                         title="Preview Product"
+                       >
+                         <FiEye size={18} />
                        </button>
-                        <button onClick={() => openDeleteConfirm(p.id || p._id)} className="hover:text-red-400 transition-colors">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
+                       <button 
+                         onClick={(e) => handleEdit(p, e)} 
+                         className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-amber-50 hover:text-amber-500 transition-all border border-transparent hover:border-amber-100"
+                         title="Edit Product"
+                       >
+                         <FiEdit3 size={18} />
+                       </button>
+                       <button 
+                         onClick={(e) => openDeleteConfirm(p.id || p._id, e)} 
+                         className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-red-50 hover:text-red-400 transition-all border border-transparent hover:border-red-100"
+                         title="Delete Product"
+                       >
+                         <FiTrash2 size={18} />
+                       </button>
                     </div>
                   </td>
                 </tr>
@@ -183,12 +214,17 @@ const ProductManager = () => {
         </div>
       </div>
 
-      <ProductModal 
+       <ProductModal 
         isOpen={isProductModalOpen} 
         onClose={() => setIsProductModalOpen(false)} 
         product={editingProduct}
         refreshProducts={loadProducts}
         onSuccess={(msg) => showStatus(msg, 'success')}
+      />
+      <ProductPreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={() => setIsPreviewModalOpen(false)}
+        product={previewingProduct}
       />
       <ImportModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)} refreshProducts={loadProducts} />
       <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} />

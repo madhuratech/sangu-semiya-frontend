@@ -179,7 +179,7 @@ const Home = () => {
               <h2 className="text-2xl md:text-3xl font-semibold text-slate-900 tracking-tight">Gold-Standard Range</h2>
             </div>
             <Link to="/products" className="text-slate-400 font-medium uppercase text-[10px] tracking-widest pb-1 border-b border-slate-100 hover:text-secondary hover:border-secondary transition-all">
-              View All Products
+              View All Categories
             </Link>
           </div>
 

@@ -121,6 +121,7 @@ const ProductManager = () => {
             <thead className="bg-slate-50/50 border-b border-slate-100 text-[10px] uppercase text-slate-400 font-bold tracking-[0.15em]">
               <tr>
                 <th className="px-8 py-6">Product</th>
+                <th className="px-6 py-6 font-bold">Category</th>
                 <th className="px-6 py-6 font-bold">SKU</th>
                 <th className="px-6 py-6 font-bold">Amazon Link</th>
                 <th className="px-6 py-6 font-bold">Pack Size</th>
@@ -143,6 +144,7 @@ const ProductManager = () => {
                       <div className="font-semibold text-slate-700 tracking-tight">{p.name}</div>
                     </div>
                   </td>
+                  <td className="px-6 py-5"><span className="text-xs font-medium text-slate-500">{p.category || 'General'}</span></td>
                   <td className="px-6 py-5"><span className="text-xs font-medium text-slate-400 uppercase tracking-tighter">{p.sku || 'N/A'}</span></td>
                   <td className="px-6 py-5">
                     {p.amazonLink ? (

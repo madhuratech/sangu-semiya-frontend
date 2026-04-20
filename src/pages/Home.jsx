@@ -14,7 +14,11 @@ const ProductBenefits = memo(lazy(() => import('../components/home/ProductBenefi
 const MilestoneSection = memo(lazy(() => import('../components/home/MilestoneSection')));
 const BulkOrderCTA = memo(lazy(() => import('../components/home/BulkOrderCTA')));
 const EnquirySection = memo(lazy(() => import('../components/home/EnquirySection')));
-
+import heroSemiya from '../assets/hero-semiya.png';
+import step1Raw from '../assets/step1-raw.png';
+import step2Cleaning from '../assets/step2-cleaning.png';
+import step3Production from '../assets/step3-production.png';
+import step4Quality from '../assets/step4-quality.png';
 
 const Home = () => {
   const [data, setData] = useState({
@@ -33,10 +37,10 @@ const Home = () => {
   useReveal([isProductsLoading]);
 
   const steps = [
-    { title: "Raw Selection", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Wheat_ears.jpg/400px-Wheat_ears.jpg", desc: "Sourcing the finest hard wheat grains." },
-    { title: "Cleaning", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=400&auto=format&fit=crop", desc: "Multi-stage automated purification." },
-    { title: "Production", image: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?q=80&w=400&auto=format&fit=crop", desc: "Untouched-by-hand extrusion." },
-    { title: "Quality Check", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop", desc: "ISO-standard nutritional testing." }
+    { title: "Raw Selection", image: step1Raw, desc: "Sourcing the finest hard wheat grains." },
+    { title: "Cleaning", image: step2Cleaning, desc: "Multi-stage automated purification." },
+    { title: "Production", image: step3Production, desc: "Untouched-by-hand extrusion." },
+    { title: "Quality Check", image: step4Quality, desc: "ISO-standard nutritional testing." }
   ];
 
   const benefits = [
@@ -122,7 +126,7 @@ const Home = () => {
               <div className="relative p-3 bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden transform-gpu will-change-transform transition-transform duration-700 hover:scale-[1.02]">
                 <div className="aspect-[5/5] lg:aspect-[5/5] w-full bg-slate-50 relative overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&q=100&w=1600"
+                    src={heroSemiya}
                     alt="Sangu Brand Package"
                     width="1200"
                     height="1650"

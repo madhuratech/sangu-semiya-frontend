@@ -12,7 +12,7 @@ const FounderSection = () => (
         <div className="absolute -inset-4 bg-gradient-to-br from-secondary/5 via-primary/5 to-transparent rounded-3xl blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         <div className="relative rounded-3xl overflow-hidden shadow-sm border border-slate-100">
           <div className="aspect-[4/5] bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center relative">
-            <img src={founderImage} alt="Founder Image" style={{ height: 'stretch' }} />
+            <img src={founderImage} alt="Founder Image" className='aspect-[4/5] h-fit' />
 
             <div className="absolute inset-0 opacity-">
               {/* <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

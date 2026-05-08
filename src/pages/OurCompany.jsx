@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiAward, FiEye, FiTarget, FiClock, FiUsers, FiHeart, FiArrowRight } from 'react-icons/fi';
+import founderImage from '../assets/Chairman.jpg';
+
+
 
 const OurCompany = () => {
   return (
@@ -39,29 +42,34 @@ const OurCompany = () => {
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-br from-secondary/10 via-primary/5 to-transparent rounded-3xl blur-xl opacity-40"></div>
               <div className="relative rounded-3xl overflow-hidden shadow-xl border-4 border-white">
-                <div className="aspect-[4/5] bg-gradient-to-br from-secondary to-red-800 flex items-center justify-center relative">
-                  <div className="absolute inset-0 opacity-5">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <pattern id="about-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                          <circle cx="30" cy="30" r="20" fill="none" stroke="white" strokeWidth="0.5"/>
-                        </pattern>
-                      </defs>
-                      <rect width="100%" height="100%" fill="url(#about-pattern)"/>
-                    </svg>
-                  </div>
-                  <div className="text-center z-10 p-8">
-                    <div className="w-28 h-28 mx-auto mb-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-lg">
-                      <FiAward className="text-white" size={48} />
-                    </div>
-                    <h3 className="text-white text-3xl font-medium mb-1">K. Chandran</h3>
-                    <p className="text-white/70 text-[14px] font-medium uppercase tracking-widest">Founder & Visionary</p>
-                    <div className="mt-4 inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10">
-                      <span className="text-primary font-medium text-lg">1982</span>
-                      <span className="text-white/60 text-[14px]">EST.</span>
-                    </div>
-                  </div>
-                </div>
+                <div className="relative rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+                          <div className="aspect-[4/5] bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center relative">
+                            <img src={founderImage} alt="Founder Image" className='w-full h-full object-cover' />
+                
+                            <div className="absolute inset-0 opacity-">
+                              {/* <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                  <defs>
+                                    <pattern id="founder-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                      <circle cx="20" cy="20" r="10" fill="none" stroke="white" strokeWidth="0.5"/>
+                                    </pattern>
+                                  </defs>
+                                  <rect width="100%" height="100%" fill="url(#founder-pattern)"/>
+                                </svg> */}
+                            </div>
+                            {/* <div className="text-center z-10 p-8">
+                                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/10 shadow-lg">
+                                  <FiAward className="text-white" size={24} />
+                                </div>
+                                <h3 className="text-white text-xl font-medium mb-1">K. Chandran</h3>
+                                <p className="text-white/50 text-[12px] font-medium uppercase tracking-widest">Founder & Visionary</p>
+                                <div className="mt-4 inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/50">
+                                  <span className="text-primary font-medium text-sm">1982</span>
+                                  <span className="text-white/40 text-[12px]">EST.</span>
+                                </div>
+                              </div> */}
+                          </div>
+                        </div>
+
               </div>
             </div>
 

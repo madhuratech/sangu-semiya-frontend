@@ -30,7 +30,7 @@ const Navbar = () => {
       {/* Top Info Bar */}
       <div className="bg-gray-800 text-gray-300 text-sm py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <span className="font-medium text-white tracking-wide">Taste Tradition in Every Strand 🍜</span>
+          <span className="font-medium text-white tracking-wide">Authentic Taste • Premium Quality • Trusted by Families Since Years </span>
           <div className="flex items-center gap-6">
             <a
               href="mailto:info@sangubrandsemiya.com"
@@ -57,14 +57,14 @@ const Navbar = () => {
 
             {/* Left Nav Links */}
             <div className="hidden md:flex items-center gap-7">
-              <Link
-                to="/"
+              <Link 
+                to="/" 
                 className={`font-medium transition-all duration-200 hover:text-secondary hover:scale-105 ${isActive('/') ? 'text-secondary' : 'text-gray-900'}`}
               >
                 Home
               </Link>
-              <Link
-                to="/about"
+              <Link 
+                to="/about" 
                 className={`font-medium transition-all duration-200 hover:text-secondary hover:scale-105 ${isActive('/about') ? 'text-secondary' : 'text-gray-900'}`}
               >
                 Our Company
@@ -130,14 +130,14 @@ const Navbar = () => {
 
             {/* Right Nav Links */}
             <div className="hidden md:flex items-center gap-7">
-              <Link
-                to="/blog"
+              <Link 
+                to="/blog" 
                 className={`font-medium transition-all duration-200 hover:text-secondary hover:scale-105 ${isActive('/blog') ? 'text-secondary' : 'text-gray-900'}`}
               >
                 Blog & Recipe
               </Link>
-              <Link
-                to="/contact-us"
+              <Link 
+                to="/contact-us" 
                 className={`font-medium transition-all duration-200 hover:text-secondary hover:scale-105 ${isActive('/contact-us') ? 'text-secondary' : 'text-gray-900'}`}
               >
                 Contact Us
@@ -157,16 +157,16 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden bg-primary border-t border-yellow-400 animate-fade-in-down pb-6 pt-12 transform-gpu">
             <div className="px-4 space-y-1 text-center font-medium">
-              <Link
-                to="/"
-                onClick={toggleMenu}
+              <Link 
+                to="/" 
+                onClick={toggleMenu} 
                 className={`block py-3 hover:text-secondary transition ${isActive('/') ? 'text-secondary underline decoration-2 underline-offset-8' : 'text-gray-900'}`}
               >
                 Home
               </Link>
-              <Link
-                to="/about"
-                onClick={toggleMenu}
+              <Link 
+                to="/about" 
+                onClick={toggleMenu} 
                 className={`block py-3 hover:text-secondary transition ${isActive('/about') ? 'text-secondary underline decoration-2 underline-offset-8' : 'text-gray-900'}`}
               >
                 Our Company
@@ -205,16 +205,16 @@ const Navbar = () => {
                   )}
                 </div>
               </div>
-              <Link
-                to="/blog"
-                onClick={toggleMenu}
+              <Link 
+                to="/blog" 
+                onClick={toggleMenu} 
                 className={`block py-3 hover:text-secondary transition ${isActive('/blog') ? 'text-secondary underline decoration-2 underline-offset-8' : 'text-gray-900'}`}
               >
                 Blog & Recipe
               </Link>
-              <Link
-                to="/contact-us"
-                onClick={toggleMenu}
+              <Link 
+                to="/contact-us" 
+                onClick={toggleMenu} 
                 className={`block py-3 hover:text-secondary transition ${isActive('/contact-us') ? 'text-secondary underline decoration-2 underline-offset-8' : 'text-gray-900'}`}
               >
                 Contact Us

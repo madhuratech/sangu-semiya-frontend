@@ -39,7 +39,7 @@ const Home = () => {
   const steps = [
     { title: "Raw Selection", image: step1Raw, desc: "Sourcing the finest hard wheat grains." },
     { title: "Cleaning", image: step2Cleaning, desc: "Multi-stage automated purification." },
-    { title: "Production", image: step3Production, desc: "Untouched-by-hand extrusion." },
+    { title: "Production", image: step3Production, desc: "Traditionally handcrafted with care and precision." },
     { title: "Quality Check", image: step4Quality, desc: "ISO-standard nutritional testing." }
   ];
 

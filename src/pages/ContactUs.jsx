@@ -15,7 +15,7 @@ const ContactUs = () => {
     if (!form.name.trim()) {
       newErrors.name = 'Name is required';
       valid = false;
-    }
+    }'
 
     if (!form.phone.trim()) {
       newErrors.phone = 'Phone number is required';

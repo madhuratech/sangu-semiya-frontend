@@ -78,7 +78,7 @@ const Navbar = () => {
                   Products <FiChevronDown size={14} className={`transition-transform ${productsOpen ? 'rotate-180' : ''}`} />
                 </div>
                 {productsOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-md shadow-xl py-2 border border-gray-100 animate-fade-in-down transform-gpu">
+                  <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-md shadow-xl py-2 border border-gray-100 animate-fade-in-down transform-gpu max-h-[380px] sm:max-h-[450px] max-h-[70vh] overflow-y-auto custom-scrollbar">
                     <Link
                       to="/our-product-range"
                       className={`block px-4 py-2 text-sm font-medium hover:bg-yellow-50 transition-colors border-b border-gray-50 mb-1 ${isActive('/our-product-range') ? 'text-secondary' : 'text-primary'}`}
@@ -155,7 +155,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden bg-primary border-t border-yellow-400 animate-fade-in-down pb-6 pt-12 transform-gpu">
+          <div className="md:hidden bg-primary border-t border-yellow-400 animate-fade-in-down pb-6 pt-12 transform-gpu absolute top-full left-0 w-full max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar shadow-2xl">
             <div className="px-4 space-y-1 text-center font-medium">
               <Link 
                 to="/" 

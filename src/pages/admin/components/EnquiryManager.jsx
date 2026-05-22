@@ -58,8 +58,10 @@ const EnquiryManager = () => {
     return enquiries.filter(e => {
        if (e.type) return e.type === activeTab;
        // Inference logic for records without an explicit type
-       if (activeTab === 'Product') return !!e.email && e.email !== '';
-       return !e.email || e.email === '';
+       const isInstant = e.message === 'Sent from Instant Enquiry form';
+       if (activeTab === 'Instant') return isInstant;
+       if (activeTab === 'Product') return !isInstant;
+       return true;
     });
   }, [enquiries, activeTab]);
 

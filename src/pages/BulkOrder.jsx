@@ -13,6 +13,8 @@ const BulkOrder = () => {
     quantity: '',
     message: ''
   });
+  const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
+  const [touched, setTouched] = useState({ name: false, phone: false, email: false });
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,17 +47,64 @@ const BulkOrder = () => {
     }
   }, [location]);
 
+  const validateField = (fieldName, value) => {
+    let error = '';
+    if (fieldName === 'name') {
+      if (!value.trim()) {
+        error = 'Name is required';
+      }
+    } else if (fieldName === 'phone') {
+      if (!value.trim()) {
+        error = 'Phone number is required';
+      } else if (!/^\+?[\d\s-]{10,}$/.test(value)) {
+        error = 'Please enter a valid phone number (at least 10 digits)';
+      }
+    } else if (fieldName === 'email') {
+      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        error = 'Please enter a valid email address';
+      }
+    }
+    return error;
+  };
+
+  const handleBlur = (fieldName) => {
+    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    const error = validateField(fieldName, formData[fieldName]);
+    setErrors(prev => ({ ...prev, [fieldName]: error }));
+  };
+
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setErrors(prev => ({ ...prev, [name]: error }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Mark all validated fields as touched and run full validation
+    setTouched({ name: true, phone: true, email: true });
+    const nameError = validateField('name', formData.name);
+    const phoneError = validateField('phone', formData.phone);
+    const emailError = validateField('email', formData.email);
+
+    const newErrors = { name: nameError, phone: phoneError, email: emailError };
+    setErrors(newErrors);
+
+    if (nameError || phoneError || emailError) {
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', formData);
       alert('Enquiry submitted successfully! Our team will contact you soon.');
       setFormData({ name: '', phone: '', email: '', product: '', quantity: '', message: '' });
+      setErrors({ name: '', phone: '', email: '' });
+      setTouched({ name: false, phone: false, email: false });
     } catch (err) {
       console.error('Submission error:', err);
       alert('Network issue: Please try contacting us via WhatsApp instead.');
@@ -106,21 +155,24 @@ const BulkOrder = () => {
           {/* Form Side */}
           <div className="lg:w-3/5 p-12">
             <h3 className="text-2xl font-medium text-gray-900 mb-8">Submit Enquiry</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Contact Name *</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="John Doe" />
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} onBlur={() => handleBlur('name')} className={`w-full px-4 py-3 border ${errors.name ? 'border-secondary focus:ring-secondary focus:border-secondary' : 'border-gray-300 focus:ring-primary focus:border-primary'} rounded-xl focus:ring-2 outline-none transition`} placeholder="John Doe" />
+                  {errors.name && <p className="text-secondary text-xs mt-1 font-medium">{errors.name}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="+91 90000 00000" />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} onBlur={() => handleBlur('phone')} className={`w-full px-4 py-3 border ${errors.phone ? 'border-secondary focus:ring-secondary focus:border-secondary' : 'border-gray-300 focus:ring-primary focus:border-primary'} rounded-xl focus:ring-2 outline-none transition`} placeholder="+91 90000 00000" />
+                  {errors.phone && <p className="text-secondary text-xs mt-1 font-medium">{errors.phone}</p>}
                 </div>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="john@company.com" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} onBlur={() => handleBlur('email')} className={`w-full px-4 py-3 border ${errors.email ? 'border-secondary focus:ring-secondary focus:border-secondary' : 'border-gray-300 focus:ring-primary focus:border-primary'} rounded-xl focus:ring-2 outline-none transition`} placeholder="john@company.com" />
+                {errors.email && <p className="text-secondary text-xs mt-1 font-medium">{errors.email}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

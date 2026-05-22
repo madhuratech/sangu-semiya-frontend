@@ -5,38 +5,59 @@ import { FiMapPin, FiPhone, FiMail, FiMessageCircle, FiSend, FiClock, FiCheckCir
 const ContactUs = () => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
   const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
+  const [touched, setTouched] = useState({ name: false, phone: false, email: false });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = { name: '', phone: '', email: '' };
-
-    if (!form.name.trim()) {
-      newErrors.name = 'Name is required';
-      valid = false;
-    }'
-
-    if (!form.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-      valid = false;
-    } else if (!/^\+?[\d\s-]{10,}$/.test(form.phone)) {
-      newErrors.phone = 'Please enter a valid phone number (at least 10 digits)';
-      valid = false;
+  const validateField = (fieldName, value) => {
+    let error = '';
+    if (fieldName === 'name') {
+      if (!value.trim()) {
+        error = 'Name is required';
+      }
+    } else if (fieldName === 'phone') {
+      if (!value.trim()) {
+        error = 'Phone number is required';
+      } else if (!/^\+?[\d\s-]{10,}$/.test(value)) {
+        error = 'Please enter a valid phone number (at least 10 digits)';
+      }
+    } else if (fieldName === 'email') {
+      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        error = 'Please enter a valid email address';
+      }
     }
+    return error;
+  };
 
-    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = 'Please enter a valid email address';
-      valid = false;
+  const handleBlur = (fieldName) => {
+    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    const error = validateField(fieldName, form[fieldName]);
+    setErrors(prev => ({ ...prev, [fieldName]: error }));
+  };
+
+  const handleChange = (fieldName, value) => {
+    setForm(prev => ({ ...prev, [fieldName]: value }));
+    if (touched[fieldName]) {
+      const error = validateField(fieldName, value);
+      setErrors(prev => ({ ...prev, [fieldName]: error }));
     }
-
-    setErrors(newErrors);
-    return valid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    
+    // Mark all fields as touched and run full validation
+    setTouched({ name: true, phone: true, email: true });
+    const nameError = validateField('name', form.name);
+    const phoneError = validateField('phone', form.phone);
+    const emailError = validateField('email', form.email);
+
+    const newErrors = { name: nameError, phone: phoneError, email: emailError };
+    setErrors(newErrors);
+
+    if (nameError || phoneError || emailError) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -85,6 +106,7 @@ const ContactUs = () => {
       setSubmitted(true);
       setForm({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
       setErrors({ name: '', phone: '', email: '' });
+      setTouched({ name: false, phone: false, email: false });
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
       console.error('Enquiry submission error:', err);
@@ -180,19 +202,23 @@ const ContactUs = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Name *</label>
-                    <input type="text" required value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}
-                      className={`w-full bg-white border ${errors.name ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-secondary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
+                    <input type="text" value={form.name} 
+                      onChange={(e) => handleChange('name', e.target.value)}
+                      onBlur={() => handleBlur('name')}
+                      className={`w-full bg-white border ${errors.name ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-primary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="Enter your name" />
                     {errors.name && <p className="text-secondary text-xs mt-1 font-medium">{errors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Email Address</label>
-                    <input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})}
-                      className={`w-full bg-white border ${errors.email ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-secondary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
+                    <input type="email" value={form.email} 
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      onBlur={() => handleBlur('email')}
+                      className={`w-full bg-white border ${errors.email ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-primary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="your@email.com" />
                     {errors.email && <p className="text-secondary text-xs mt-1 font-medium">{errors.email}</p>}
                   </div>
@@ -200,15 +226,17 @@ const ContactUs = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Phone Number *</label>
-                    <input type="tel" required value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})}
-                      className={`w-full bg-white border ${errors.phone ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-secondary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
+                    <input type="tel" value={form.phone} 
+                      onChange={(e) => handleChange('phone', e.target.value)}
+                      onBlur={() => handleBlur('phone')}
+                      className={`w-full bg-white border ${errors.phone ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-primary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="+91..." />
                     {errors.phone && <p className="text-secondary text-xs mt-1 font-medium">{errors.phone}</p>}
                   </div>
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Product Interest</label>
                     <select value={form.product} onChange={(e) => setForm({...form, product: e.target.value})}
-                      className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none">
+                      className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none">
                       <option value="">Select a product</option>
                       <option value="Roasted Vermicelli">Roasted Vermicelli</option>
                       <option value="Ragi Vermicelli">Ragi Vermicelli</option>
@@ -223,13 +251,13 @@ const ContactUs = () => {
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Quantity (KG)</label>
                   <input type="text" value={form.quantity} onChange={(e) => setForm({...form, quantity: e.target.value})}
-                    className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+                    className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
                     placeholder="e.g. 500 KG" />
                 </div>
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Message</label>
                   <textarea rows="3" value={form.message} onChange={(e) => setForm({...form, message: e.target.value})}
-                    className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none resize-none"
+                    className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none resize-none"
                     placeholder="Tell us about your requirements..." />
                 </div>
                 <button type="submit" disabled={isSubmitting} className={`w-full ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-secondary hover:bg-red-700'} text-white py-4 rounded-xl font-medium text-[15px] uppercase tracking-widest shadow-xl transition-all duration-300 flex items-center justify-center gap-2`}>

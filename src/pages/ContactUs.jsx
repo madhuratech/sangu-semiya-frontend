@@ -1,21 +1,96 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { FiMapPin, FiPhone, FiMail, FiMessageCircle, FiSend, FiClock, FiCheckCircle } from 'react-icons/fi';
 
 const ContactUs = () => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
+  const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { name: '', phone: '', email: '' };
+
+    if (!form.name.trim()) {
+      newErrors.name = 'Name is required';
+      valid = false;
+    }
+
+    if (!form.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+      valid = false;
+    } else if (!/^\+?[\d\s-]{10,}$/.test(form.phone)) {
+      newErrors.phone = 'Please enter a valid phone number (at least 10 digits)';
+      valid = false;
+    }
+
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = 'Please enter a valid email address';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
     try {
+      // 1. Save to Database
       await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', form);
+
+      // 2. Send Email via Resend
+      const resendApiKey = import.meta.env.VITE_RESEND_API_KEY;
+      if (resendApiKey) {
+        try {
+          await axios.post(
+            'https://api.resend.com/emails',
+            {
+              from: 'Sangu Brand Semiya <onboarding@resend.dev>',
+              to: 'dina@madhuratech.in',
+              subject: 'New Enquiry from Sangu Brand Semiya',
+              html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                  <h2 style="color: #DA291C; border-bottom: 2px solid #FDB913; padding-bottom: 10px;">New Contact Enquiry</h2>
+                  <p><strong>Name:</strong> ${form.name}</p>
+                  <p><strong>Phone:</strong> ${form.phone}</p>
+                  <p><strong>Email:</strong> ${form.email || 'N/A'}</p>
+                  <p><strong>Product Interest:</strong> ${form.product || 'General'}</p>
+                  <p><strong>Quantity:</strong> ${form.quantity || 'N/A'}</p>
+                  <p style="background: #f9f9f9; padding: 15px; border-radius: 5px; border-left: 4px solid #FDB913;">
+                    <strong>Message:</strong><br/>
+                    ${form.message ? form.message.replace(/\n/g, '<br/>') : 'N/A'}
+                  </p>
+                </div>
+              `
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${resendApiKey}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+        } catch (resendErr) {
+          console.error('Failed to send email via Resend:', resendErr);
+        }
+      } else {
+        console.warn('VITE_RESEND_API_KEY is not defined in env variables.');
+      }
+
       setSubmitted(true);
       setForm({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
+      setErrors({ name: '', phone: '', email: '' });
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
       console.error('Enquiry submission error:', err);
       alert('Something went wrong. Please try again or call us directly.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -33,7 +108,7 @@ const ContactUs = () => {
             Contact Us
           </h1>
           <p className="text-lg text-slate-400 font-normal max-w-xl mx-auto">
-            Ready to partner with us? Have questions about our products? We'd love to hear from you.
+            {"Ready to partner with us? Have questions about our products? We'd love to hear from you."}
           </p>
         </div>
       </section>
@@ -101,7 +176,7 @@ const ContactUs = () => {
               {submitted && (
                 <div className="mb-8 p-5 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-3">
                   <FiCheckCircle className="text-emerald-600 shrink-0" size={20} />
-                  <p className="text-emerald-800 font-medium text-xs">Thank you! Your enquiry has been received. We'll get back to you shortly.</p>
+                  <p className="text-emerald-800 font-medium text-xs">{"Thank you! Your enquiry has been received. We'll get back to you shortly."}</p>
                 </div>
               )}
 
@@ -110,22 +185,25 @@ const ContactUs = () => {
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Name *</label>
                     <input type="text" required value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}
-                      className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+                      className={`w-full bg-white border ${errors.name ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-secondary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="Enter your name" />
+                    {errors.name && <p className="text-secondary text-xs mt-1 font-medium">{errors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Email Address</label>
                     <input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})}
-                      className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+                      className={`w-full bg-white border ${errors.email ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-secondary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="your@email.com" />
+                    {errors.email && <p className="text-secondary text-xs mt-1 font-medium">{errors.email}</p>}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Phone Number *</label>
                     <input type="tel" required value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})}
-                      className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+                      className={`w-full bg-white border ${errors.phone ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-secondary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="+91..." />
+                    {errors.phone && <p className="text-secondary text-xs mt-1 font-medium">{errors.phone}</p>}
                   </div>
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Product Interest</label>
@@ -154,8 +232,8 @@ const ContactUs = () => {
                     className="w-full bg-white border border-slate-200 focus:border-secondary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none resize-none"
                     placeholder="Tell us about your requirements..." />
                 </div>
-                <button type="submit" className="w-full bg-secondary hover:bg-red-700 text-white py-4 rounded-xl font-medium text-[15px] uppercase tracking-widest shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
-                  <FiSend size={16} /> Submit Message
+                <button type="submit" disabled={isSubmitting} className={`w-full ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-secondary hover:bg-red-700'} text-white py-4 rounded-xl font-medium text-[15px] uppercase tracking-widest shadow-xl transition-all duration-300 flex items-center justify-center gap-2`}>
+                  <FiSend size={16} /> {isSubmitting ? 'Submitting Message...' : 'Submit Message'}
                 </button>
               </form>
             </div>

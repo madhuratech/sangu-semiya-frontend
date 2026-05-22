@@ -62,46 +62,10 @@ const ContactUs = () => {
     setIsSubmitting(true);
     try {
       // 1. Save to Database
-      await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', form);
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
+      await axios.post(`${apiUrl}/enquiry`, form);
 
-      // 2. Send Email via Resend
-      const resendApiKey = import.meta.env.VITE_RESEND_API_KEY;
-      if (resendApiKey) {
-        try {
-          await axios.post(
-            'https://api.resend.com/emails',
-            {
-              from: 'Sangu Brand Semiya <onboarding@resend.dev>',
-              to: import.meta.env.VITE_ENQUIRY_TO_EMAIL,
-              subject: 'New Enquiry from Sangu Brand Semiya',
-              html: `
-                <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                  <h2 style="color: #DA291C; border-bottom: 2px solid #FDB913; padding-bottom: 10px;">New Contact Enquiry</h2>
-                  <p><strong>Name:</strong> ${form.name}</p>
-                  <p><strong>Phone:</strong> ${form.phone}</p>
-                  <p><strong>Email:</strong> ${form.email || 'N/A'}</p>
-                  <p><strong>Product Interest:</strong> ${form.product || 'General'}</p>
-                  <p><strong>Quantity:</strong> ${form.quantity || 'N/A'}</p>
-                  <p style="background: #f9f9f9; padding: 15px; border-radius: 5px; border-left: 4px solid #FDB913;">
-                    <strong>Message:</strong><br/>
-                    ${form.message ? form.message.replace(/\n/g, '<br/>') : 'N/A'}
-                  </p>
-                </div>
-              `
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${resendApiKey}`,
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-        } catch (resendErr) {
-          console.error('Failed to send email via Resend:', resendErr);
-        }
-      } else {
-        console.warn('VITE_RESEND_API_KEY is not defined in env variables.');
-      }
+      // Email sending is now handled by the backend directly in the /api/enquiry endpoint.
 
       setSubmitted(true);
       setForm({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
@@ -195,13 +159,6 @@ const ContactUs = () => {
               <h2 className="text-3xl font-medium text-slate-900 mb-2 tracking-tight italic">Send Us a Message</h2>
               <p className="text-slate-500 font-normal mb-8 text-sm">Quick response guaranteed within 2 hours.</p>
 
-              {submitted && (
-                <div className="mb-8 p-5 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-3">
-                  <FiCheckCircle className="text-emerald-600 shrink-0" size={20} />
-                  <p className="text-emerald-800 font-medium text-xs">{"Thank you! Your enquiry has been received. We'll get back to you shortly."}</p>
-                </div>
-              )}
-
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
@@ -227,7 +184,12 @@ const ContactUs = () => {
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Phone Number *</label>
                     <input type="tel" value={form.phone} 
-                      onChange={(e) => handleChange('phone', e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^[0-9]+$/.test(val)) {
+                        handleChange('phone', val);
+                      }
+                    }}
                       onBlur={() => handleBlur('phone')}
                       className={`w-full bg-white border ${errors.phone ? 'border-secondary focus:border-secondary' : 'border-slate-200 focus:border-primary'} rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none`}
                       placeholder="+91..." />
@@ -305,6 +267,22 @@ const ContactUs = () => {
           </div>
         </div>
       </section>
+
+      {/* Custom Success Popup */}
+      {submitted && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl transform transition-all">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiCheckCircle className="text-emerald-500" size={32} />
+            </div>
+            <h3 className="text-xl font-medium text-slate-900 mb-2">Successfully Sent!</h3>
+            <p className="text-slate-500 text-sm mb-6">Thank you for your message. We will get back to you shortly.</p>
+            <button onClick={() => setSubmitted(false)} className="bg-slate-900 text-white w-full py-3 rounded-xl font-medium uppercase tracking-widest text-xs hover:bg-primary transition-colors">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );

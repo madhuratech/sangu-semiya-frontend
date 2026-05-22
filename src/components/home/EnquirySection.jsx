@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { FiTrendingUp, FiSmile, FiTarget, FiZap } from 'react-icons/fi';
+import { FiTrendingUp, FiSmile, FiTarget, FiZap, FiCheckCircle } from 'react-icons/fi';
 
 const EnquirySection = ({ trustCards }) => {
   const [form, setForm] = useState({ name: '', phone: '', quantity: '', email: '' });
   const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,28 +32,11 @@ const EnquirySection = ({ trustCards }) => {
         product: 'General Enquiry',
         message: 'Sent from Instant Enquiry form'
       };
-      await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', enquiryData);
-      
-      try {
-        await axios.post('https://api.resend.com/emails', {
-          from: 'Acme <onboarding@resend.dev>',
-          to: [import.meta.env.VITE_ENQUIRY_TO_EMAIL],
-          subject: 'New Enquiry Received',
-          html: `<p><strong>Name:</strong> ${form.name}</p>
-                 <p><strong>Email:</strong> ${form.email}</p>
-                 <p><strong>Phone:</strong> ${form.phone}</p>
-                 <p><strong>Quantity:</strong> ${form.quantity} KG</p>`
-        }, {
-          headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        });
-      } catch (emailErr) {
-        console.error("Failed to send email via Resend:", emailErr);
-      }
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
+      await axios.post(`${apiUrl}/enquiry`, enquiryData);
 
-      alert("Thank you! Enquiry received.");
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 5000);
       setForm({ name: '', phone: '', quantity: '', email: '' });
       setErrors({});
     } catch (err) {
@@ -134,8 +118,11 @@ const EnquirySection = ({ trustCards }) => {
                     placeholder="+91..."
                     value={form.phone}
                     onChange={(e) => {
-                      setForm({...form, phone: e.target.value});
-                      if (errors.phone) setErrors({...errors, phone: null});
+                      const val = e.target.value;
+                      if (val === '' || /^[0-9]+$/.test(val)) {
+                        setForm({...form, phone: val});
+                        if (errors.phone) setErrors({...errors, phone: null});
+                      }
                     }}
                     onBlur={(e) => {
                       if (e.target.value && !/^\d{10,}$/.test(e.target.value)) {
@@ -164,6 +151,23 @@ const EnquirySection = ({ trustCards }) => {
             </form>
           </div>
         </div>
+
+        {/* Custom Success Popup */}
+        {submitted && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl transform transition-all">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiCheckCircle className="text-emerald-500" size={32} />
+              </div>
+              <h3 className="text-xl font-medium text-slate-900 mb-2">Successfully Sent!</h3>
+              <p className="text-slate-500 text-sm mb-6">Thank you for your enquiry. We will get back to you shortly.</p>
+              <button onClick={() => setSubmitted(false)} className="bg-slate-900 text-white w-full py-3 rounded-xl font-medium uppercase tracking-widest text-xs hover:bg-primary transition-colors">
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
   );
 };

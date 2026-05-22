@@ -18,7 +18,7 @@ const ContactUs = () => {
     } else if (fieldName === 'phone') {
       if (!value.trim()) {
         error = 'Phone number is required';
-      } else if (!/^\+?[\d\s-]{10,}$/.test(value)) {
+      } else if (!/^\d{10,}$/.test(value)) {
         error = 'Please enter a valid phone number (at least 10 digits)';
       }
     } else if (fieldName === 'email') {
@@ -72,7 +72,7 @@ const ContactUs = () => {
             'https://api.resend.com/emails',
             {
               from: 'Sangu Brand Semiya <onboarding@resend.dev>',
-              to: 'dina@madhuratech.in',
+              to: import.meta.env.VITE_ENQUIRY_TO_EMAIL,
               subject: 'New Enquiry from Sangu Brand Semiya',
               html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">

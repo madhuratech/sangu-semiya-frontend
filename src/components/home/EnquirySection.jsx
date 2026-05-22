@@ -3,22 +3,58 @@ import axios from 'axios';
 import { FiTrendingUp, FiSmile, FiTarget, FiZap } from 'react-icons/fi';
 
 const EnquirySection = ({ trustCards }) => {
-  const [form, setForm] = useState({ name: '', phone: '', quantity: '' });
+  const [form, setForm] = useState({ name: '', phone: '', quantity: '', email: '' });
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let newErrors = {};
+    if (!/^\d{10,}$/.test(form.phone)) {
+      newErrors.phone = "Please enter a valid phone number (at least 10 digits)";
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const enquiryData = {
         name: form.name,
         phone: form.phone,
         quantity: form.quantity,
-        email: '',
+        email: form.email,
         product: 'General Enquiry',
         message: 'Sent from Instant Enquiry form'
       };
       await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', enquiryData);
+      
+      try {
+        await axios.post('https://api.resend.com/emails', {
+          from: 'Acme <onboarding@resend.dev>',
+          to: [import.meta.env.VITE_ENQUIRY_TO_EMAIL],
+          subject: 'New Enquiry Received',
+          html: `<p><strong>Name:</strong> ${form.name}</p>
+                 <p><strong>Email:</strong> ${form.email}</p>
+                 <p><strong>Phone:</strong> ${form.phone}</p>
+                 <p><strong>Quantity:</strong> ${form.quantity} KG</p>`
+        }, {
+          headers: {
+            'Authorization': `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      } catch (emailErr) {
+        console.error("Failed to send email via Resend:", emailErr);
+      }
+
       alert("Thank you! Enquiry received.");
-      setForm({ name: '', phone: '', quantity: '' });
+      setForm({ name: '', phone: '', quantity: '', email: '' });
+      setErrors({});
     } catch (err) {
       console.error("Enquiry submission error:", err);
       alert("Something went wrong. Please try again or call us.");
@@ -69,17 +105,46 @@ const EnquirySection = ({ trustCards }) => {
                   required
                 />
               </div>
+              <div className="space-y-1">
+                <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Email Address *</label>
+                <input 
+                  type="email" 
+                  className={`w-full bg-white border ${errors.email ? 'border-[#d32f2f]' : 'border-slate-200'} focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none`} 
+                  placeholder="your@email.com"
+                  value={form.email}
+                  onChange={(e) => {
+                    setForm({...form, email: e.target.value});
+                    if (errors.email) setErrors({...errors, email: null});
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value)) {
+                      setErrors(prev => ({...prev, email: "Please enter a valid email address"}));
+                    }
+                  }}
+                  required
+                />
+                {errors.email && <p className="text-[#d32f2f] text-[13px] font-medium mt-1 pl-1">{errors.email}</p>}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Phone Number</label>
+                  <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Phone Number *</label>
                   <input 
                     type="tel" 
-                    className="w-full bg-white border border-slate-200 focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none" 
+                    className={`w-full bg-white border ${errors.phone ? 'border-[#d32f2f] text-[#d32f2f]' : 'border-slate-200'} focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none`} 
                     placeholder="+91..."
                     value={form.phone}
-                    onChange={(e) => setForm({...form, phone: e.target.value})}
+                    onChange={(e) => {
+                      setForm({...form, phone: e.target.value});
+                      if (errors.phone) setErrors({...errors, phone: null});
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value && !/^\d{10,}$/.test(e.target.value)) {
+                        setErrors(prev => ({...prev, phone: "Please enter a valid phone number (at least 10 digits)"}));
+                      }
+                    }}
                     required
                   />
+                  {errors.phone && <p className="text-[#d32f2f] text-[13px] font-medium mt-1 pl-1">{errors.phone}</p>}
                 </div>
                 <div className="space-y-1">
                   <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Quantity (KG)</label>

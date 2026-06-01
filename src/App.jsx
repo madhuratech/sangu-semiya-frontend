@@ -38,7 +38,7 @@ const AppContent = () => {
   return (
     <div className={`flex flex-col ${isAdminRoute ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       {!isAdminRoute && <Navbar />}
-      <main className={`flex-grow ${!isAdminRoute ? 'pt-28' : ''}`}>
+      <main className={`flex-grow ${!isAdminRoute ? 'pt-32 md:pt-40' : ''}`}>
         <Suspense fallback={<GlobalLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />

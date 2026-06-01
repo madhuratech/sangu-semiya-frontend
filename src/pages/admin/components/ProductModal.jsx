@@ -18,8 +18,8 @@ const ICON_OPTIONS = [
 ];
 
 const DEFAULT_FEATURES = [
-  { icon: '🌾', label: '100% Hard Wheat Semolina' },
-  { icon: '✨', label: 'No Maida, No Bleach, No Additives' },
+  { icon: '🌾', label: 'Premium Wheat Semolina' },
+  { icon: '✨', label: 'No Bleach, No Artificial Additives' },
   { icon: '⏱️', label: 'Cooks in Just 5–7 Minutes' },
   { icon: '🛡️', label: 'Triple-Layer Fresh-Lock Packaging' },
 ];

@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect, memo } from 'react';
 import axios from 'axios';
+import { slugify } from '../utils/slugify';
 import { FiMenu, FiX, FiChevronDown, FiMail, FiPhone } from 'react-icons/fi';
 import logo from '../assets/Sangu-Brand-Semiya-Logo.png';
 
@@ -98,8 +99,8 @@ const Navbar = () => {
                       products.map((product) => (
                         <Link
                           key={product._id || product.id}
-                          to={`/product/${product.name}`}
-                          className={`block px-4 py-2 text-[15px] font-medium hover:bg-yellow-50 hover:text-secondary transition-colors ${isActive(`/product/${product.name}`) ? 'text-secondary' : 'text-gray-600'}`}
+                          to={`/product/${slugify(product.name)}`}
+                          className={`block px-4 py-2 text-[15px] font-medium hover:bg-yellow-50 hover:text-secondary transition-colors ${isActive(`/product/${slugify(product.name)}`) ? 'text-secondary' : 'text-gray-600'}`}
                           onClick={() => setProductsOpen(false)}
                         >
                           {product.name}
@@ -193,7 +194,7 @@ const Navbar = () => {
                     products.map((product) => (
                       <Link
                         key={product._id || product.id}
-                        to={`/product/${product.name}`}
+                        to={`/product/${slugify(product.name)}`}
                         onClick={toggleMenu}
                         className="block py-2 text-gray-800 hover:text-secondary transition text-xs font-medium"
                       >

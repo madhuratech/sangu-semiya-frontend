@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
+import { slugify } from '../../utils/slugify';
 
 const fallbackProducts = [
   { name: 'Roasted Vermicelli', sizes: '180g | 450g', color: 'from-amber-50 to-orange-50', border: 'border-amber-100', emoji: '🌾' },
@@ -45,7 +46,7 @@ const ProductRange = ({ products = [] }) => {
             return (
               <Link
                 key={i}
-                to={`/product/${product.name}`}
+                to={`/product/${slugify(product.name)}`}
                 className={`group bg-gradient-to-br ${bgColor} ${borderColor} border rounded-3xl p-6 lg:p-8 hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center relative overflow-hidden`}
               >
                 <div className="absolute -top-8 -right-8 w-24 h-24 bg-white/40 rounded-full blur-xl group-hover:scale-125 transition-transform duration-500"></div>

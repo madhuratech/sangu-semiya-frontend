@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { slugify } from '../utils/slugify';
 import { FiArrowRight } from 'react-icons/fi';
 
 const showcaseProducts = [
@@ -158,7 +159,7 @@ const ProductShowcase = () => {
 
                   <div className="pt-6">
                     <Link 
-                      to={`/product/${product.name}`}
+                      to={`/product/${slugify(product.name)}`}
                       className={`inline-flex items-center gap-3 text-[14px] font-medium uppercase tracking-widest text-slate-400 hover:text-primary transition-all group/link`}
                     >
                       Know More 

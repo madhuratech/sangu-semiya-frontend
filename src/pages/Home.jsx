@@ -1,6 +1,7 @@
 import { useState, useEffect, memo, Suspense, lazy } from 'react';
 import api from '../utils/api';
 import { Link } from 'react-router-dom';
+import { slugify } from '../utils/slugify';
 import { ProductSkeleton } from '../components/Skeleton';
 import { useReveal } from '../utils/useReveal';
 
@@ -164,7 +165,7 @@ const Home = () => {
                     width="1200"
                     height="1650"
                     className="w-full h-full object-cover rounded-[2rem]"
-                    fetchpriority="high"
+                    fetchPriority="high"
                   />
                 </div>
               </div>
@@ -230,7 +231,7 @@ const Home = () => {
               ? [1, 2, 3, 4].map(n => <ProductSkeleton key={n} />)
               : featuredProducts.map((p, idx) => (
                 <div key={p?._id || idx} className={`group relative flex flex-col transform-gpu will-change-transform reveal reveal-up delay-${(idx + 1) * 100} hover-lift`}>
-                  <Link to={`/product/${p?.name}`} className="relative aspect-square overflow-hidden bg-slate-50 rounded-3xl mb-4 border border-slate-100 group-hover:shadow-xl transition-all duration-500">
+                  <Link to={`/product/${slugify(p?.name)}`} className="relative aspect-square overflow-hidden bg-slate-50 rounded-3xl mb-4 border border-slate-100 group-hover:shadow-xl transition-all duration-500">
                     <img
                       src={p?.images?.[0] || 'https://via.placeholder.com/500?text=Sangu+Semiya'}
                       alt={p?.name}
@@ -242,7 +243,7 @@ const Home = () => {
                   </Link>
 
                   <div className="text-left px-1">
-                    <Link to={`/product/${p?.name}`}>
+                    <Link to={`/product/${slugify(p?.name)}`}>
                       <h3 className="text-sm font-medium text-slate-800 hover:text-primary transition-colors line-clamp-1 mb-1 uppercase tracking-tight">{p?.name}</h3>
                     </Link>
                     <p className="text-[14px] text-slate-400 font-medium uppercase tracking-widest">{p?.category || "Authentic"}</p>

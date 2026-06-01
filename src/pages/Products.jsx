@@ -1,6 +1,7 @@
 import { useState, useEffect, memo, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
+import { slugify } from '../utils/slugify';
 import { ProductSkeleton } from '../components/Skeleton';
 
 const CookingInspiration = memo(lazy(() => import('../components/home/CookingInspiration')));
@@ -54,7 +55,7 @@ const Products = () => {
                   <ProductSkeleton />
                 ) : (
                   <>
-                    <Link to={`/product/${product.name}`} className="relative aspect-square overflow-hidden bg-slate-50 rounded-2xl mb-4 border border-slate-100 group-hover:shadow-xl transition-all duration-500">
+                    <Link to={`/product/${slugify(product.name)}`} className="relative aspect-square overflow-hidden bg-slate-50 rounded-2xl mb-4 border border-slate-100 group-hover:shadow-xl transition-all duration-500">
                       <img 
                         src={product.images?.[0] || 'https://via.placeholder.com/500?text=Sangu+Semiya'} 
                         alt={product.name} 
@@ -72,7 +73,7 @@ const Products = () => {
                     </Link>
 
                     <div className="text-left px-1">
-                      <Link to={`/product/${product.name}`}>
+                      <Link to={`/product/${slugify(product.name)}`}>
                         <h3 className="text-xs font-medium text-slate-800 hover:text-primary transition-colors line-clamp-1 mb-1 uppercase tracking-tight">{product.name}</h3>
                       </Link>
                       <p className="text-[14px] text-slate-400 font-medium uppercase tracking-widest mt-1">{product.category || "Authentic"}</p>

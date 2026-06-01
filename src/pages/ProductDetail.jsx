@@ -1,12 +1,15 @@
 import { useState, useEffect, memo, Suspense, lazy } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import { slugify } from '../utils/slugify';
 import { FiBox, FiClock, FiShield, FiBriefcase, FiCheckCircle, FiWind, FiTarget, FiZap, FiActivity, FiTrendingUp, FiPackage } from 'react-icons/fi';
 
 const CookingInspiration = memo(lazy(() => import('../components/home/CookingInspiration')));
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { t } = useTranslation();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [recipes, setRecipes] = useState([]);
@@ -18,23 +21,72 @@ const ProductDetail = () => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        const [productRes, allProductsRes, homeRes] = await Promise.all([
-          axios.get(`https://sangu-semiya-backend-bq1f.onrender.com/api/products/${id}`),
+        const [allProductsRes, homeRes] = await Promise.all([
           axios.get(`https://sangu-semiya-backend-bq1f.onrender.com/api/products`),
           axios.get(`https://sangu-semiya-backend-bq1f.onrender.com/api/homepage`)
         ]);
-        setProduct(productRes.data);
+
+        const allProducts = allProductsRes.data || [];
+        const targetSlug = slugify(id);
+
+        let matchedProduct = allProducts.find(p => 
+          p.id === id || 
+          p._id === id || 
+          slugify(p.name) === targetSlug
+        );
+
+        if (!matchedProduct) {
+          const candidates = allProducts.filter(p => 
+            p.name && (
+              targetSlug.includes(slugify(p.name)) || 
+              slugify(p.name).includes(targetSlug)
+            )
+          );
+          if (candidates.length > 0) {
+            candidates.sort((a, b) => {
+              const indexA = targetSlug.indexOf(slugify(a.name));
+              const indexB = targetSlug.indexOf(slugify(b.name));
+              if (indexA !== indexB) {
+                return indexA - indexB;
+              }
+              return b.name.length - a.name.length;
+            });
+            matchedProduct = candidates[0];
+          }
+        }
+
+        let productData = null;
+        if (matchedProduct) {
+          try {
+            const detailRes = await axios.get(`https://sangu-semiya-backend-bq1f.onrender.com/api/products/${matchedProduct.id || matchedProduct._id}`);
+            productData = detailRes.data;
+          } catch (detailErr) {
+            console.warn('Failed to fetch full product details, falling back to list data', detailErr);
+            productData = matchedProduct;
+          }
+        }
+
+        if (!productData) {
+          try {
+            const detailRes = await axios.get(`https://sangu-semiya-backend-bq1f.onrender.com/api/products/${id}`);
+            productData = detailRes.data;
+          } catch (err) {
+            console.error('Product not found in list or API', err);
+          }
+        }
+
+        setProduct(productData);
         if (homeRes.data?.recipes) {
           setRecipes(homeRes.data.recipes);
         }
-        if (productRes.data) {
-          document.title = `${productRes.data.name} | Sangu Brand Semiya`;
-          if (productRes.data.packSize) {
-            const sizes = productRes.data.packSize.split(',').map(s => s.trim());
+        if (productData) {
+          document.title = `${productData.name} | Sangu Brand Semiya`;
+          if (productData.packSize) {
+            const sizes = productData.packSize.split(',').map(s => s.trim());
             setSelectedSize(sizes[0]);
           }
-          const related = allProductsRes.data
-            .filter(p => (p.id || p._id) !== (productRes.data.id || productRes.data._id) && p.name !== productRes.data.name)
+          const related = allProducts
+            .filter(p => (p.id || p._id) !== (productData.id || productData._id) && p.name !== productData.name)
             .slice(0, 4);
           setRelatedProducts(related);
         }
@@ -56,9 +108,9 @@ const ProductDetail = () => {
   if (!product) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white space-y-4">
       <div className="text-6xl font-medium text-slate-100 tracking-tight">404</div>
-      <div className="text-sm font-medium text-slate-800 uppercase tracking-widest">Product Not Found</div>
+      <div className="text-sm font-medium text-slate-800 uppercase tracking-widest">{t('productNotFound')}</div>
       <Link to="/products" className="mt-4 bg-slate-900 text-white px-6 py-3 text-[14px] font-medium uppercase tracking-widest hover:bg-primary transition-colors">
-        Back to Products
+        {t('backToProducts')}
       </Link>
     </div>
   );
@@ -94,22 +146,22 @@ const ProductDetail = () => {
     icon: typeof f.icon === 'string' ? getIcon(f.icon) : f.icon,
     label: f.label
   })) : [
-    { icon: <FiBriefcase />, label: '100% Hard Wheat Semolina' },
-    { icon: <FiCheckCircle />, label: 'No Maida, No Bleach, No Additives' },
-    { icon: <FiClock />, label: 'Cooks in Just 5–7 Minutes' },
-    { icon: <FiShield />, label: 'Triple-Layer Fresh-Lock Packaging' },
+    { icon: <FiBriefcase />, label: t('featureWheatSemolina') },
+    { icon: <FiCheckCircle />, label: t('featureNoAdditives') },
+    { icon: <FiClock />, label: t('featureQuickCook') },
+    { icon: <FiShield />, label: t('featureTripleLayer') },
   ];
 
   const nutritionRows = meta.nutrition?.length > 0 ? meta.nutrition.map(n => [n.label, n.value]) : [
-    ['Energy', '360 kcal'],
-    ['Protein', '10.5 g'],
-    ['Carbohydrates', '77.2 g'],
-    ['Total Fat', '0.8 g'],
-    ['Dietary Fiber', '2.5 g'],
-    ['Sodium', '< 5 mg'],
+    [t('nutrEnergy'), '360 kcal'],
+    [t('nutrProtein'), '10.5 g'],
+    [t('nutrCarbs'), '77.2 g'],
+    [t('nutrTotalFat'), '0.8 g'],
+    [t('nutrDietaryFiber'), '2.5 g'],
+    [t('nutrSodium'), '< 5 mg'],
   ];
 
-  const bannerHeadline = meta.bannerHeadline || 'Pure Wheat.\nPerfect Texture.\nEvery Time.';
+  const bannerHeadline = meta.bannerHeadline || t('cookingInspirationFallback');
 
   return (
     <div className="bg-white min-h-screen font-sans selection:bg-primary selection:text-white pb-32">
@@ -117,9 +169,9 @@ const ProductDetail = () => {
       {/* ── Breadcrumb ── */}
       <div className="border-b border-slate-50 py-3 px-6 lg:px-16">
         <div className="max-w-screen-xl mx-auto flex items-center gap-2 text-[13px] font-medium uppercase tracking-widest text-slate-400">
-          <Link to="/" className="hover:text-slate-900 transition">Home</Link>
+          <Link to="/" className="hover:text-slate-900 transition">{t('home')}</Link>
           <span className="opacity-30">/</span>
-          <Link to="/products" className="hover:text-slate-900 transition">Products</Link>
+          <Link to="/products" className="hover:text-slate-900 transition">{t('products')}</Link>
           <span className="opacity-30">/</span>
           <span className="text-slate-900">{product.name}</span>
         </div>
@@ -135,9 +187,8 @@ const ProductDetail = () => {
               <button
                 key={idx}
                 onClick={() => setActiveImage(idx)}
-                className={`w-14 h-14 lg:w-16 lg:h-16 rounded-xl border transition-all overflow-hidden p-1 bg-white ${
-                  activeImage === idx ? 'border-slate-900 shadow-md' : 'border-slate-100 opacity-60 hover:opacity-100 hover:border-slate-300'
-                }`}
+                className={`w-14 h-14 lg:w-16 lg:h-16 rounded-xl border transition-all overflow-hidden p-1 bg-white ${activeImage === idx ? 'border-slate-900 shadow-md' : 'border-slate-100 opacity-60 hover:opacity-100 hover:border-slate-300'
+                  }`}
               >
                 <img src={img} alt="" width="64" height="64" className="w-full h-full object-contain" />
               </button>
@@ -152,10 +203,10 @@ const ProductDetail = () => {
               width="800"
               height="800"
               className="w-full h-full object-contain p-8 lg:p-14 transition-transform duration-500 group-hover:scale-105"
-              fetchpriority="high"
+              fetchPriority="high"
             />
             <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm shadow-sm text-slate-900 text-[12px] font-medium uppercase tracking-widest px-3 py-1.5 rounded-full border border-slate-200">
-              Sangu Quality
+              {t('sanguQuality')}
             </div>
           </div>
 
@@ -164,7 +215,7 @@ const ProductDetail = () => {
             <div className="flex items-center gap-2 mb-3">
               <span className="text-[12px] font-medium uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded">{product.category || 'Collection'}</span>
               {product.sku && (
-                <span className="text-[12px] font-medium uppercase tracking-widest text-slate-400">SKU: {product.sku}</span>
+                <span className="text-[12px] font-medium uppercase tracking-widest text-slate-400">{t('skuPrefix')}{product.sku}</span>
               )}
             </div>
 
@@ -173,22 +224,21 @@ const ProductDetail = () => {
             </h1>
 
             <div className="flex items-baseline gap-3 mb-6 pb-6 border-b border-slate-100">
-               <span className="text-sm font-medium text-slate-400 italic">Price on Enquiry</span>
+              <span className="text-sm font-medium text-slate-400 italic">{t('priceOnEnquiry')}</span>
             </div>
 
             {availableSizes.length > 0 && (
               <div className="mb-8">
-                <p className="text-[13px] font-medium uppercase tracking-widest text-slate-400 mb-3">Select Pack Size</p>
+                <p className="text-[13px] font-medium uppercase tracking-widest text-slate-400 mb-3">{t('selectPackSize')}</p>
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-5 py-2.5 rounded-xl text-[14px] font-medium uppercase tracking-widest border transition-all ${
-                        selectedSize === size
-                          ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
-                          : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 shadow-sm'
-                      }`}
+                      className={`px-5 py-2.5 rounded-xl text-[14px] font-medium uppercase tracking-widest border transition-all ${selectedSize === size
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 shadow-sm'
+                        }`}
                     >
                       {size}
                     </button>
@@ -203,7 +253,7 @@ const ProductDetail = () => {
                 className="flex items-center justify-center gap-2 bg-primary text-white py-4 rounded-xl text-[14px] font-medium uppercase tracking-widest hover:bg-secondary transition-all shadow-lg active:scale-95 transform-gpu will-change-transform"
               >
                 <FiBox className="w-4 h-4" />
-                Bulk Enquiry
+                {t('bulkEnquiry')}
               </Link>
               {product.amazonLink && (
                 <a
@@ -212,13 +262,13 @@ const ProductDetail = () => {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 border border-slate-200 text-slate-600 py-4 rounded-xl text-[14px] font-medium uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm"
                 >
-                  Buy on Amazon
+                  {t('buyOnAmazon')}
                 </a>
               )}
             </div>
 
             <p className="text-[17px] text-slate-500 leading-relaxed mb-8">
-              {product.description || 'Crafted with premium 100% hard wheat semolina. No maida, no additives — just pure, authentic semiya your family deserves.'}
+              {product.description || t('defaultDescription')}
             </p>
 
             <ul className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-8">
@@ -249,7 +299,7 @@ const ProductDetail = () => {
             {bannerHeadline.split('\n').join(' ')}
           </h2>
           <p className="text-white/60 mt-4 max-w-lg mx-auto text-sm">
-            Experience the gold standard of vermicelli excellence.
+            {t('lifestyleText')}
           </p>
         </div>
       </div>
@@ -259,14 +309,14 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
           <div className="space-y-8">
             <div className="space-y-2">
-              <span className="text-[13px] font-medium uppercase tracking-widest text-primary">Quality Promise</span>
-              <h2 className="text-3xl font-medium text-slate-900 tracking-tight">Pure Wheat Excellence</h2>
+              <span className="text-[13px] font-medium uppercase tracking-widest text-primary">{t('qualityPromise')}</span>
+              <h2 className="text-3xl font-medium text-slate-900 tracking-tight">{t('pureWheatExcellence')}</h2>
             </div>
             <div className="grid grid-cols-1 gap-4">
               {[
-                { label: '100% Raw Durum Wheat', desc: 'Only the finest hard wheat suji — no maida fillers, ever.' },
-                { label: 'Non-Sticky Guarantee', desc: 'Perfectly separated strands every single time you cook.' },
-                { label: 'Family Trusted', desc: 'Serving traditional South Indian households since 1982.' },
+                { label: t('promiseDurumWheatLabel'), desc: t('promiseDurumWheatDesc') },
+                { label: t('promiseNonStickyLabel'), desc: t('promiseNonStickyDesc') },
+                { label: t('promiseFamilyTrustedLabel'), desc: t('promiseFamilyTrustedDesc') },
               ].map((item, i) => (
                 <div key={i} className="p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all">
                   <h3 className="text-xs font-medium text-slate-900 mb-1 uppercase tracking-tight">{item.label}</h3>
@@ -278,7 +328,7 @@ const ProductDetail = () => {
 
           <div className="bg-slate-50 p-8 lg:p-12 rounded-3xl border border-slate-100 shadow-inner">
             <h3 className="text-[14px] font-medium uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2">
-              <FiZap className="text-primary" /> Nutrition at a Glance
+              <FiZap className="text-primary" /> {t('nutritionGlance')}
             </h3>
             <div className="space-y-2">
               {nutritionRows.map(([label, val]) => (
@@ -298,17 +348,17 @@ const ProductDetail = () => {
           <div className="max-w-screen-xl mx-auto px-6 lg:px-16">
             <div className="flex items-end justify-between mb-12">
               <div className="space-y-2">
-                <p className="text-[13px] font-medium uppercase tracking-widest text-slate-400">Recommended</p>
-                <h2 className="text-2xl font-medium text-slate-900 tracking-tight uppercase">Related Varieties</h2>
+                <p className="text-[13px] font-medium uppercase tracking-widest text-slate-400">{t('recommended')}</p>
+                <h2 className="text-2xl font-medium text-slate-900 tracking-tight uppercase">{t('relatedVarieties')}</h2>
               </div>
               <Link to="/products" className="text-xs font-medium text-slate-400 hover:text-primary transition underline underline-offset-8 decoration-slate-200">
-                View All Varieties
+                {t('viewAllVarieties')}
               </Link>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map(p => (
                 <div key={p._id || p.id} className="group flex flex-col items-center text-center transform-gpu will-change-transform">
-                  <Link to={`/product/${p.name}`} className="block aspect-square bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-4 p-6 w-full group-hover:shadow-lg transition-all duration-500">
+                  <Link to={`/product/${slugify(p.name)}`} className="block aspect-square bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-4 p-6 w-full group-hover:shadow-lg transition-all duration-500">
                     <img
                       src={p.images?.[0] || 'https://via.placeholder.com/400?text=Sangu'}
                       alt={p.name}
@@ -318,7 +368,7 @@ const ProductDetail = () => {
                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                     />
                   </Link>
-                  <Link to={`/product/${p.name}`}>
+                  <Link to={`/product/${slugify(p.name)}`}>
                     <h3 className="text-xs font-medium text-slate-800 hover:text-primary transition-colors uppercase tracking-tight line-clamp-1 mb-1">{p.name}</h3>
                   </Link>
                   <p className="text-xs font-medium text-primary">{p.price || "₹45.00"}</p>

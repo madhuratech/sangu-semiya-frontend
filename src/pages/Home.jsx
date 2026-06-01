@@ -203,11 +203,11 @@ const Home = () => {
         </Suspense>
       </section>
 
-      <div className="min-h-[400px]">
+      {/* <div className="min-h-[400px]">
         <Suspense fallback={<div className="h-96" />}>
           <ProductionProcess steps={steps} />
         </Suspense>
-      </div>
+      </div> */}
 
       {/* Middle Banners Placement */}
       {renderCustomSections('middle')}

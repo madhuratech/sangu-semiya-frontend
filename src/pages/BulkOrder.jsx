@@ -136,10 +136,10 @@ const BulkOrder = () => {
              <div className="relative z-10">
                <h3 className="text-3xl font-medium mb-6">Distributor Benefits</h3>
                <ul className="space-y-4 mb-12">
-                 <li className="flex items-center gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center"><FiShield className="text-white" size={14} /></div> High profit margins</li>
-                 <li className="flex items-center gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center"><FiBox className="text-white" size={14} /></div> Marketing support & materials</li>
-                 <li className="flex items-center gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center"><FiTruck className="text-white" size={14} /></div> Priority dispatch pan-India</li>
-                 <li className="flex items-center gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center"><FiPhoneCall className="text-white" size={14} /></div> Direct factory connect</li>
+                 <li className="flex items-start gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center shrink-0"><FiShield className="text-white" size={14} /></div> High profit margins</li>
+                 <li className="flex items-start gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center shrink-0"><FiBox className="text-white" size={14} /></div> Marketing support & materials</li>
+                 <li className="flex items-start gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center shrink-0"><FiTruck className="text-white" size={14} /></div> Priority dispatch pan-India</li>
+                 <li className="flex items-start gap-3"><div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center shrink-0"><FiPhoneCall className="text-white" size={14} /></div> Direct factory connect</li>
                </ul>
 
                <div className="space-y-3">

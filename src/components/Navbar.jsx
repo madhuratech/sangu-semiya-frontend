@@ -52,7 +52,7 @@ const Navbar = () => {
       </div>
 
       {/* Main Nav Bar */}
-      <div className="bg-primary shadow-lg relative h-24 md:h-22 animate-fade-in-down shadow-primary/20">
+      <div className="bg-primary shadow-lg relative h-24 md:h-24 animate-fade-in-down shadow-primary/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex items-center justify-between h-full relative">
 
@@ -123,7 +123,7 @@ const Navbar = () => {
                     alt="Sangu Brand Semiya"
                     width="112"
                     height="112"
-                    className="h-20 w-22 md:h-28 md:w-28 object-contain"
+                    className="h-20 w-20 md:h-28 md:w-28 object-contain"
                   />
                 </div>
               </Link>

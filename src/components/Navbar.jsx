@@ -29,7 +29,7 @@ const Navbar = () => {
   return (
     <nav className="fixed w-full z-50 top-0 transform-gpu translate-z-0">
       {/* Top Info Bar */}
-      <div className="bg-gray-800 text-gray-300 text-sm py-2">
+      <div className="hidden md:block bg-gray-800 text-gray-300 text-sm py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <span className="font-medium text-white tracking-wide">Authentic Taste    • Premium Quality    • Trusted by Families Since Years </span>
           <div className="flex items-center gap-6">

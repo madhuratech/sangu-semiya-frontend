@@ -168,7 +168,7 @@ const ProductDetail = () => {
 
       {/* ── Breadcrumb ── */}
       <div className="border-b border-slate-50 py-3 px-6 lg:px-16">
-        <div className="max-w-screen-xl mx-auto flex items-center gap-2 text-[13px] font-medium uppercase tracking-widest text-slate-400">
+        <div className="max-w-screen-xl mx-auto flex flex-wrap items-center gap-y-1.5 gap-x-2 text-[13px] font-medium uppercase tracking-widest text-slate-400">
           <Link to="/" className="hover:text-slate-900 transition">{t('home')}</Link>
           <span className="opacity-30">/</span>
           <Link to="/products" className="hover:text-slate-900 transition">{t('products')}</Link>

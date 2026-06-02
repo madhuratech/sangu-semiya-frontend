@@ -122,7 +122,7 @@ const Footer = () => {
                   href="https://www.google.com/maps/search/?api=1&query=344+Periyannan+Nagar,+Thadagam+Road,+Tvs+Nagar,+Coimbatore+641025"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white transition-colors underline-offset-2 hover:underline"
+                 className="text-red-100 hover:text-yellow-400 no-underline hover:no-underline transition-colors duration-300"
                 >
                   344 / 3, Periyannan Nagar, Thadagam Road, Tvs Nagar, Coimbatore-641 025
                 </a>

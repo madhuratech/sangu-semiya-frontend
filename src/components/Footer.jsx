@@ -156,14 +156,25 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="relative mt-10 pt-5 border-t border-red-500 flex flex-col sm:flex-row items-center justify-center text-center">
-          <p className="text-sm text-red-100">
-            2026 © All Rights Reserved By Sangu Brand Semiya
-          </p>
-           <p className="text-sm text-red-100">
-            Developed by <a href="https://madhuratechnologies.in" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Madhura Technologies</a>
-          </p>
-        </div>
+       <div className="relative mt-10 pt-5 border-t border-red-500 flex flex-col sm:flex-row items-center justify-center text-center gap-2">
+  
+  <p className="text-sm text-red-100">
+    2026 © All Rights Reserved By Sangu Brand Semiya
+  </p>
+
+  <p className="text-sm text-red-100">
+    Developed by{" "}
+    <a
+      href="https://madhuratech.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-white hover:text-blue-900 transition-colors duration-300"
+    >
+      Madhura Technologies
+    </a>
+  </p>
+
+</div>
       </div>
 
       {/* WhatsApp Floating Button */}

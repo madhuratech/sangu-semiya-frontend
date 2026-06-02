@@ -113,6 +113,7 @@ const ContactUs = () => {
                 title: 'Visit Us',
                 lines: ['344 / 3, Periyannan Nagar,', 'Thadagam Road, Tvs Nagar,', 'Coimbatore - 641 025'],
                 color: 'from-secondary to-red-700',
+                mapLink: 'https://www.google.com/maps/search/?api=1&query=344+Periyannan+Nagar,+Thadagam+Road,+Tvs+Nagar,+Coimbatore+641025',
               },
               {
                 icon: <FiPhone size={24} />,
@@ -136,7 +137,12 @@ const ContactUs = () => {
                 color: 'from-violet-500 to-violet-700',
               },
             ].map((card, i) => (
-              <div key={i} className="bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:bg-white hover:shadow-lg transition-all duration-300 group text-center">
+              <div
+                key={i}
+                className="bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:bg-white hover:shadow-lg transition-all duration-300 group text-center"
+                onClick={card.mapLink ? () => window.open(card.mapLink, '_blank', 'noopener,noreferrer') : undefined}
+                style={card.mapLink ? { cursor: 'pointer' } : {}}
+              >
                 <div className={`w-14 h-14 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white shadow-lg transition-transform duration-300`}>
                   {card.icon}
                 </div>
@@ -152,6 +158,9 @@ const ContactUs = () => {
                     )
                   ))}
                 </div>
+                {card.mapLink && (
+                  <p className="mt-3 text-xs text-secondary font-medium opacity-0 group-hover:opacity-100 transition-opacity tracking-widest uppercase">Open in Maps ↗</p>
+                )}
               </div>
             ))}
           </div>
@@ -224,7 +233,7 @@ const ContactUs = () => {
                     <select
                       value={quantityUnit}
                       onChange={(e) => setQuantityUnit(e.target.value)}
-                      className="bg-white border border-slate-200 focus:border-primary rounded-xl px-3 py-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+                      className="w-24 shrink-0 bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
                     >
                       <option value="Gram">Gram</option>
                       <option value="KG">KG</option>

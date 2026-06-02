@@ -197,7 +197,7 @@ const BulkOrder = () => {
                     <select
                       value={quantityUnit}
                       onChange={(e) => setQuantityUnit(e.target.value)}
-                      className="bg-white border border-gray-300 rounded-xl px-3 py-3 font-medium text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer"
+                      className="w-24 shrink-0 bg-white border border-gray-300 rounded-xl px-2 py-3 font-medium text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer"
                     >
                       <option value="Gram">Gram</option>
                       <option value="KG">KG</option>

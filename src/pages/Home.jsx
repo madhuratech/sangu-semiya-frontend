@@ -216,7 +216,7 @@ const Home = () => {
       {/* Featured Gallery with Skeleton loaders */}
       <section className="py-14 lg:py-20 bg-white min-h-[600px]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 tracking-tight">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-2 tracking-tight">
             <div className="space-y-1">
               <span className="text-secondary font-medium text-[12px] tracking-widest uppercase block animate-fade-in">Premium Selection</span>
               <h2 className="text-2xl md:text-3xl font-medium text-slate-900 tracking-tight">Gold-Standard Range</h2>

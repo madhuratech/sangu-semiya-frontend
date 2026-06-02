@@ -160,6 +160,9 @@ const Footer = () => {
           <p className="text-sm text-red-100">
             2026 © All Rights Reserved By Sangu Brand Semiya
           </p>
+           <p className="text-sm text-red-100">
+            Developed by <a href="https://madhuratechnologies.in" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Madhura Technologies</a>
+          </p>
         </div>
       </div>
 

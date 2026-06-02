@@ -18,7 +18,7 @@ const EnquiryDetailsModal = ({ isOpen, onClose, enquiry }) => {
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-slide-up border border-slate-100">
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden animate-slide-up border border-slate-100">
         
         {/* Header */}
         <div className="px-8 py-6 bg-slate-50 border-b border-slate-200 flex justify-between items-center shrink-0">
@@ -32,7 +32,7 @@ const EnquiryDetailsModal = ({ isOpen, onClose, enquiry }) => {
         </div>
 
         {/* Body */}
-        <div className="p-8 space-y-8">
+        <div className="p-6 space-y-6 overflow-y-auto">
           
           {/* Customer Info */}
           <div className="space-y-4">

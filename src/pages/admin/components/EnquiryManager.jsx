@@ -114,7 +114,7 @@ const EnquiryManager = () => {
               {filteredData.map(e => (
                 <tr key={e._id} className="hover:bg-slate-50/50 transition duration-150">
                   <td className="px-6 py-4">
-                    <p className="text-xs font-medium text-slate-700">{new Date(e.createdAt || Date.now()).toLocaleDateString()}</p>
+                    <p className="text-xs font-medium text-slate-700">{new Date(e.created_at || e.createdAt || Date.now()).toLocaleDateString()}</p>
                     <p className="text-[14px] text-slate-400 font-mono mt-0.5">#{e._id?.slice(-6)}</p>
                   </td>
                   <td className="px-6 py-4">

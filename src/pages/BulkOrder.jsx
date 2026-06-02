@@ -18,6 +18,7 @@ const BulkOrder = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [quantityUnit, setQuantityUnit] = useState('KG');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -100,7 +101,10 @@ const BulkOrder = () => {
 
     setIsSubmitting(true);
     try {
-      await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', formData);
+      await axios.post('https://sangu-semiya-backend-bq1f.onrender.com/api/enquiry', {
+        ...formData,
+        quantity: formData.quantity ? `${formData.quantity} ${quantityUnit}` : ''
+      });
       alert('Enquiry submitted successfully! Our team will contact you soon.');
       setFormData({ name: '', phone: '', email: '', product: '', quantity: '', message: '' });
       setErrors({ name: '', phone: '', email: '' });
@@ -114,7 +118,7 @@ const BulkOrder = () => {
   };
 
   const openWhatsApp = () => {
-    const text = `Hi Sangu Semiya team, I want to bulk order %0a*Product:* ${formData.product || 'Any'} %0a*Quantity:* ${formData.quantity || 'TBD'} %0a*Message:* ${formData.message || 'N/A'}`;
+    const text = `Hi Sangu Semiya team, I want to bulk order %0a*Product:* ${formData.product || 'Any'} %0a*Quantity:* ${formData.quantity ? `${formData.quantity} ${quantityUnit}` : 'TBD'} %0a*Message:* ${formData.message || 'N/A'}`;
     window.open(`https://wa.me/919876543210?text=${text}`, '_blank');
   };
 
@@ -188,7 +192,19 @@ const BulkOrder = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Expected Quantity *</label>
-                  <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="e.g. 500" />
+                  <div className="flex gap-2">
+                    <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required className="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="e.g. 500" />
+                    <select
+                      value={quantityUnit}
+                      onChange={(e) => setQuantityUnit(e.target.value)}
+                      className="bg-white border border-gray-300 rounded-xl px-3 py-3 font-medium text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer"
+                    >
+                      <option value="Gram">Gram</option>
+                      <option value="KG">KG</option>
+                      <option value="Quintal">Quintal</option>
+                      <option value="Ton">Ton</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

@@ -4,6 +4,7 @@ import { FiMapPin, FiPhone, FiMail, FiMessageCircle, FiSend, FiClock, FiCheckCir
 
 const ContactUs = () => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
+  const [quantityUnit, setQuantityUnit] = useState('KG');
   const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
   const [touched, setTouched] = useState({ name: false, phone: false, email: false });
   const [submitted, setSubmitted] = useState(false);
@@ -63,7 +64,10 @@ const ContactUs = () => {
     try {
       // 1. Save to Database
       const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
-      await axios.post(`${apiUrl}/enquiry`, form);
+      await axios.post(`${apiUrl}/enquiry`, {
+        ...form,
+        quantity: form.quantity ? `${form.quantity} ${quantityUnit}` : ''
+      });
 
       // Email sending is now handled by the backend directly in the /api/enquiry endpoint.
 
@@ -123,6 +127,7 @@ const ContactUs = () => {
                 lines: ['info@sangubrandsemiya.com', 'info.sangubrandsemiya@gmail.com'],
                 links: ['mailto:info@sangubrandsemiya.com', 'mailto:info.sangubrandsemiya@gmail.com'],
                 color: 'from-emerald-500 to-emerald-700',
+                textClass: 'break-all text-[13px]',
               },
               {
                 icon: <FiClock size={24} />,
@@ -139,7 +144,7 @@ const ContactUs = () => {
                 <div className="space-y-1">
                   {card.lines.map((line, j) => (
                     card.links ? (
-                      <a key={j} href={card.links[j]} className="block text-[17px] text-slate-500 font-normal hover:text-secondary transition-colors">
+                      <a key={j} href={card.links[j]} className={`block ${card.textClass || 'text-[17px]'} text-slate-500 font-normal hover:text-secondary transition-colors`}>
                         {line}
                       </a>
                     ) : (
@@ -211,10 +216,22 @@ const ContactUs = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Quantity (KG)</label>
-                  <input type="text" value={form.quantity} onChange={(e) => setForm({...form, quantity: e.target.value})}
-                    className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
-                    placeholder="e.g. 500 KG" />
+                  <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Quantity</label>
+                  <div className="flex gap-2">
+                    <input type="number" value={form.quantity} onChange={(e) => setForm({...form, quantity: e.target.value})}
+                      className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+                      placeholder="e.g. 500" />
+                    <select
+                      value={quantityUnit}
+                      onChange={(e) => setQuantityUnit(e.target.value)}
+                      className="bg-white border border-slate-200 focus:border-primary rounded-xl px-3 py-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+                    >
+                      <option value="Gram">Gram</option>
+                      <option value="KG">KG</option>
+                      <option value="Quintal">Quintal</option>
+                      <option value="Ton">Ton</option>
+                    </select>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Message</label>
@@ -251,17 +268,27 @@ const ContactUs = () => {
               </div>
 
               {/* Map container */}
-              <div className="bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 shadow-sm aspect-video">
+              <div className="bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 shadow-sm aspect-video relative group cursor-pointer">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.123!2d76.94!3d11.02!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDAxJzEyLjAiTiA3NsKwNTYnMjQuMCJF!5e0!3m2!1sen!2sin!4v1616161616161!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
-                  style={{ border: 0 }}
+                  style={{ border: 0, pointerEvents: 'none' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Sangu Brand Semiya Location"
                 ></iframe>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Sangu+Brand+Semiya,+344+Periyannan+Nagar,+Thadagam+Road,+Coimbatore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute inset-0 flex items-end justify-center pb-4"
+                >
+                  <span className="bg-white text-slate-700 text-xs font-medium px-4 py-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-1.5">
+                    <FiMapPin size={12} /> Open in Google Maps
+                  </span>
+                </a>
               </div>
             </div>
           </div>

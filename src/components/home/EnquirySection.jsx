@@ -4,6 +4,7 @@ import { FiTrendingUp, FiSmile, FiTarget, FiZap, FiCheckCircle } from 'react-ico
 
 const EnquirySection = ({ trustCards }) => {
   const [form, setForm] = useState({ name: '', phone: '', quantity: '', email: '' });
+  const [quantityUnit, setQuantityUnit] = useState('KG');
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -27,7 +28,7 @@ const EnquirySection = ({ trustCards }) => {
       const enquiryData = {
         name: form.name,
         phone: form.phone,
-        quantity: form.quantity,
+        quantity: form.quantity ? `${form.quantity} ${quantityUnit}` : '',
         email: form.email,
         product: 'General Enquiry',
         message: 'Sent from Instant Enquiry form'
@@ -134,15 +135,27 @@ const EnquirySection = ({ trustCards }) => {
                   {errors.phone && <p className="text-[#d32f2f] text-[13px] font-medium mt-1 pl-1">{errors.phone}</p>}
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Quantity (KG)</label>
-                  <input 
-                    type="number" 
-                    className="w-full bg-white border border-slate-200 focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none" 
-                    placeholder="e.g. 500"
-                    value={form.quantity}
-                    onChange={(e) => setForm({...form, quantity: e.target.value})}
-                    required
-                  />
+                  <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Quantity</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="number" 
+                      className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none" 
+                      placeholder="e.g. 500"
+                      value={form.quantity}
+                      onChange={(e) => setForm({...form, quantity: e.target.value})}
+                      required
+                    />
+                    <select
+                      value={quantityUnit}
+                      onChange={(e) => setQuantityUnit(e.target.value)}
+                      className="bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+                    >
+                      <option value="Gram">Gram</option>
+                      <option value="KG">KG</option>
+                      <option value="Quintal">Quintal</option>
+                      <option value="Ton">Ton</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               <button type="submit" className="w-full bg-slate-900 hover:bg-primary text-white py-3 rounded-lg font-medium text-[14px] uppercase tracking-widest shadow-md transition-all duration-300 mt-2">

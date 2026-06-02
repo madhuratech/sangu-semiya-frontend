@@ -168,7 +168,7 @@ const Footer = () => {
       href="https://madhuratech.com/"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-white hover:text-blue-900 transition-colors duration-300"
+      className="text-white hover:text-yellow-400 transition-colors duration-300"
     >
       Madhura Technologies
     </a>

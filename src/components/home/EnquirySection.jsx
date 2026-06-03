@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiTrendingUp, FiSmile, FiTarget, FiZap, FiCheckCircle } from 'react-icons/fi';
+import { FiTrendingUp, FiSmile, FiTarget, FiZap, FiCheckCircle, FiChevronDown } from 'react-icons/fi';
 
 const EnquirySection = ({ trustCards }) => {
-  const [form, setForm] = useState({ name: '', phone: '', quantity: '', email: '' });
+  const [form, setForm] = useState({ name: '', phone: '', quantity: '', email: '', product: '' });
   const [quantityUnit, setQuantityUnit] = useState('KG');
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
+    axios.get(`${apiUrl}/products`)
+      .then(res => setProducts(res.data))
+      .catch(err => console.error('Failed to fetch products:', err));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +38,7 @@ const EnquirySection = ({ trustCards }) => {
         phone: form.phone,
         quantity: form.quantity ? `${form.quantity} ${quantityUnit}` : '',
         email: form.email,
-        product: 'General Enquiry',
+        product: form.product || 'General Enquiry',
         message: 'Sent from Instant Enquiry form'
       };
       const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
@@ -38,7 +46,7 @@ const EnquirySection = ({ trustCards }) => {
 
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 5000);
-      setForm({ name: '', phone: '', quantity: '', email: '' });
+      setForm({ name: '', phone: '', quantity: '', email: '', product: '' });
       setErrors({});
     } catch (err) {
       console.error("Enquiry submission error:", err);
@@ -110,6 +118,28 @@ const EnquirySection = ({ trustCards }) => {
                 />
                 {errors.email && <p className="text-[#d32f2f] text-[13px] font-medium mt-1 pl-1">{errors.email}</p>}
               </div>
+              {/* Product Dropdown */}
+              <div className="space-y-1">
+                <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Product Interest</label>
+                <div className="relative">
+                  <select
+                    value={form.product}
+                    onChange={(e) => setForm({ ...form, product: e.target.value })}
+                    className="w-full appearance-none bg-white border-2 border-yellow-400 focus:border-yellow-500 rounded-lg px-3 py-3 pr-10 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+                    required
+                  >
+                    <option value="">Select a product</option>
+                    {products.map((p) => (
+                      <option key={p.id || p._id} value={p.name}>{p.name}</option>
+                    ))}
+                    <option value="All Products">Combination / All Products</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
+                    <FiChevronDown size={15} strokeWidth={2.5} />
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Phone Number *</label>
@@ -146,20 +176,18 @@ const EnquirySection = ({ trustCards }) => {
                       required
                     />
                     <div className="relative w-24">
-  <select
-    value={quantityUnit}
-    onChange={(e) => setQuantityUnit(e.target.value)}
-    className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 pr-6 font-medium text-xs text-slate-900 shadow-sm outline-none cursor-pointer"
-  >
-    <option value="Gram">Gram</option>
-    <option value="KG">Kg</option>
-  </select>
-
-  {/* Smaller arrow */}
-  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500 text-[10px]">
-    ▼
-  </div>
-</div>
+                      <select
+                        value={quantityUnit}
+                        onChange={(e) => setQuantityUnit(e.target.value)}
+                        className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 pr-7 font-medium text-xs text-slate-900 shadow-sm outline-none cursor-pointer"
+                      >
+                        <option value="Gram">Gram</option>
+                        <option value="KG">Kg</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500">
+                        <FiChevronDown size={13} strokeWidth={2.5} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

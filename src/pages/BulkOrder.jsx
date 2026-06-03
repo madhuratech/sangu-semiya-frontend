@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { FiShield, FiTruck, FiBox, FiPhoneCall, FiMessageCircle } from 'react-icons/fi';
+import { FiShield, FiTruck, FiBox, FiPhoneCall, FiMessageCircle, FiChevronDown } from 'react-icons/fi';
 
 const BulkOrder = () => {
   const location = useLocation();
@@ -182,28 +182,44 @@ const BulkOrder = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Interested Product *</label>
-                  <select name="product" value={formData.product} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white">
-                    <option value="">Select Product...</option>
-                    {products.map((p) => (
-                      <option key={p.id || p._id} value={p.name}>{p.name}</option>
-                    ))}
-                    <option value="All Products">Combination / All Products</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      name="product"
+                      value={formData.product}
+                      onChange={handleChange}
+                      required
+                      className="w-full appearance-none px-4 py-3 pr-10 border-2 border-yellow-400 focus:border-yellow-500 rounded-xl focus:ring-2 focus:ring-yellow-300 outline-none transition bg-white font-medium text-sm text-gray-800 cursor-pointer"
+                    >
+                      <option value="">Select a product</option>
+                      {products.map((p) => (
+                        <option key={p.id || p._id} value={p.name}>{p.name}</option>
+                      ))}
+                      <option value="All Products">Combination / All Products</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                      <FiChevronDown size={18} strokeWidth={2.5} />
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Expected Quantity *</label>
                   <div className="flex gap-2">
                     <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required className="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" placeholder="e.g. 500" />
-                    <select
-                      value={quantityUnit}
-                      onChange={(e) => setQuantityUnit(e.target.value)}
-                      className="w-24 shrink-0 bg-white border border-gray-300 rounded-xl px-2 py-3 font-medium text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer"
-                    >
-                      <option value="Gram">Gram</option>
-                      <option value="KG">KG</option>
-                      <option value="Quintal">Quintal</option>
-                      <option value="Ton">Ton</option>
-                    </select>
+                    <div className="relative shrink-0 w-24">
+                      <select
+                        value={quantityUnit}
+                        onChange={(e) => setQuantityUnit(e.target.value)}
+                        className="w-full appearance-none bg-white border border-gray-300 rounded-xl px-2 py-3 pr-8 font-medium text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer"
+                      >
+                        <option value="Gram">Gram</option>
+                        <option value="KG">KG</option>
+                        <option value="Quintal">Quintal</option>
+                        <option value="Ton">Ton</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-gray-500">
+                        <FiChevronDown size={15} strokeWidth={2.5} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -155,8 +155,8 @@ const EnquirySection = ({ trustCards }) => {
     <option value="KG">Kg</option>
   </select>
 
-  {/* Custom arrow */}
-  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500">
+  {/* Smaller arrow */}
+  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500 text-[10px]">
     ▼
   </div>
 </div>

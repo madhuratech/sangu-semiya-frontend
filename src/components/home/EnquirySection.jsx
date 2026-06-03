@@ -151,7 +151,7 @@ const EnquirySection = ({ trustCards }) => {
                       className="w-24 shrink-0 bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
                     >
                       <option value="Gram">Gram</option>
-                      <option value="KG">KG</option>
+                      <option value="KG">Kg</option>
                       
                     </select>
                   </div>

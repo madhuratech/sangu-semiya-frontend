@@ -124,7 +124,8 @@ const Footer = () => {
   rel="noopener noreferrer"
   className="text-red-100 hover:text-yellow-400 no-underline hover:no-underline transition-colors duration-300"
 >
-                  344 / 3, Periyannan Nagar, Thadagam Road, Tvs Nagar, Coimbatore-641 025
+                   Vanmathi Semiya Works
+                   <br />344 / 3, Periyannan Nagar, Thadagam Road, Tvs Nagar, Coimbatore-641 025
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-red-100">

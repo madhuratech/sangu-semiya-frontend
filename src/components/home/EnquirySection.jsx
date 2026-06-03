@@ -3,8 +3,7 @@ import axios from 'axios';
 import { FiTrendingUp, FiSmile, FiTarget, FiZap, FiCheckCircle, FiChevronDown } from 'react-icons/fi';
 
 const EnquirySection = ({ trustCards }) => {
-  const [form, setForm] = useState({ name: '', phone: '', quantity: '', email: '', product: '' });
-  const [quantityUnit, setQuantityUnit] = useState('KG');
+  const [form, setForm] = useState({ name: '', phone: '', email: '', product: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [products, setProducts] = useState([]);
@@ -36,7 +35,6 @@ const EnquirySection = ({ trustCards }) => {
       const enquiryData = {
         name: form.name,
         phone: form.phone,
-        quantity: form.quantity ? `${form.quantity} ${quantityUnit}` : '',
         email: form.email,
         product: form.product || 'General Enquiry',
         message: 'Sent from Instant Enquiry form'
@@ -46,7 +44,7 @@ const EnquirySection = ({ trustCards }) => {
 
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 5000);
-      setForm({ name: '', phone: '', quantity: '', email: '', product: '' });
+      setForm({ name: '', phone: '', email: '', product: '' });
       setErrors({});
     } catch (err) {
       console.error("Enquiry submission error:", err);
@@ -140,56 +138,28 @@ const EnquirySection = ({ trustCards }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Phone Number *</label>
-                  <input 
-                    type="tel" 
-                    className={`w-full bg-white border ${errors.phone ? 'border-[#d32f2f] text-[#d32f2f]' : 'border-slate-200'} focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none`} 
-                    placeholder="+91..."
-                    value={form.phone}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === '' || /^[0-9]+$/.test(val)) {
-                        setForm({...form, phone: val});
-                        if (errors.phone) setErrors({...errors, phone: null});
-                      }
-                    }}
-                    onBlur={(e) => {
-                      if (e.target.value && !/^\d{10,}$/.test(e.target.value)) {
-                        setErrors(prev => ({...prev, phone: "Please enter a valid phone number (at least 10 digits)"}));
-                      }
-                    }}
-                    required
-                  />
-                  {errors.phone && <p className="text-[#d32f2f] text-[13px] font-medium mt-1 pl-1">{errors.phone}</p>}
-                </div>
-                <div className="space-y-1">
-                  <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Quantity</label>
-                  <div className="flex gap-2">
-                    <input 
-                      type="number" 
-                      className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none" 
-                      placeholder="e.g. 500"
-                      value={form.quantity}
-                      onChange={(e) => setForm({...form, quantity: e.target.value})}
-                      required
-                    />
-                    <div className="relative w-24">
-                      <select
-                        value={quantityUnit}
-                        onChange={(e) => setQuantityUnit(e.target.value)}
-                        className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 pr-7 font-medium text-xs text-slate-900 shadow-sm outline-none cursor-pointer"
-                      >
-                        <option value="Gram">Gram</option>
-                        <option value="KG">Kg</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500">
-                        <FiChevronDown size={13} strokeWidth={2.5} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="space-y-1">
+                <label className="block text-[12px] uppercase font-medium tracking-widest text-slate-400 pl-1">Phone Number *</label>
+                <input 
+                  type="tel" 
+                  className={`w-full bg-white border ${errors.phone ? 'border-[#d32f2f] text-[#d32f2f]' : 'border-slate-200'} focus:border-primary rounded-lg p-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none`} 
+                  placeholder="+91..."
+                  value={form.phone}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || /^[0-9]+$/.test(val)) {
+                      setForm({...form, phone: val});
+                      if (errors.phone) setErrors({...errors, phone: null});
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value && !/^\d{10,}$/.test(e.target.value)) {
+                      setErrors(prev => ({...prev, phone: "Please enter a valid phone number (at least 10 digits)"}));
+                    }
+                  }}
+                  required
+                />
+                {errors.phone && <p className="text-[#d32f2f] text-[13px] font-medium mt-1 pl-1">{errors.phone}</p>}
               </div>
               <button type="submit" className="w-full bg-slate-900 hover:bg-primary text-white py-3 rounded-lg font-medium text-[14px] uppercase tracking-widest shadow-md transition-all duration-300 mt-2">
                  Submit Enquiry

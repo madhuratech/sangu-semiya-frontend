@@ -3,8 +3,7 @@ import axios from 'axios';
 import { FiMapPin, FiPhone, FiMail, FiMessageCircle, FiSend, FiClock, FiCheckCircle, FiChevronDown } from 'react-icons/fi';
 
 const ContactUs = () => {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
-  const [quantityUnit, setQuantityUnit] = useState('KG');
+  const [form, setForm] = useState({ name: '', email: '', phone: '', product: '', message: '' });
   const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
   const [touched, setTouched] = useState({ name: false, phone: false, email: false });
   const [submitted, setSubmitted] = useState(false);
@@ -72,15 +71,12 @@ const ContactUs = () => {
     try {
       // 1. Save to Database
       const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
-      await axios.post(`${apiUrl}/enquiry`, {
-        ...form,
-        quantity: form.quantity ? `${form.quantity} ${quantityUnit}` : ''
-      });
+      await axios.post(`${apiUrl}/enquiry`, { ...form });
 
       // Email sending is now handled by the backend directly in the /api/enquiry endpoint.
 
       setSubmitted(true);
-      setForm({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
+      setForm({ name: '', email: '', phone: '', product: '', message: '' });
       setErrors({ name: '', phone: '', email: '' });
       setTouched({ name: false, phone: false, email: false });
       setTimeout(() => setSubmitted(false), 5000);
@@ -236,36 +232,13 @@ const ContactUs = () => {
                     </div>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Quantity</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      value={form.quantity}
-                      onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-                      className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
-                      placeholder="e.g. 500"
-                    />
-                    <div className="relative w-24 shrink-0">
-                      <select
-                        value={quantityUnit}
-                        onChange={(e) => setQuantityUnit(e.target.value)}
-                        className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 pr-8 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
-                      >
-                        <option value="Gram">Gram</option>
-                        <option value="KG">Kg</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500">
-                        <FiChevronDown size={15} strokeWidth={2.5} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Message</label>
                   <textarea rows="3" value={form.message} onChange={(e) => setForm({...form, message: e.target.value})}
                     className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none resize-none"
                     placeholder="Tell us about your requirements..." />
+                </div>
                 </div>
                 <button type="submit" disabled={isSubmitting} className={`w-full ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-secondary hover:bg-red-700'} text-white py-4 rounded-xl font-medium text-[15px] uppercase tracking-widest shadow-xl transition-all duration-300 flex items-center justify-center gap-2`}>
                   <FiSend size={16} /> {isSubmitting ? 'Submitting Message...' : 'Submit Message'}

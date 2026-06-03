@@ -122,8 +122,8 @@ const EnquiryManager = () => {
                     <p className="text-xs text-slate-500 mt-0.5 font-medium">{e.phone}</p>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-[15px] font-medium text-primary uppercase">{e.product || 'General'}</p>
-                    <p className="text-xs text-slate-600 mt-1 font-medium">Qty: {e.quantity || 'TBD'}</p>
+                    <p className="text-sm font-semibold text-primary">{e.product && e.product !== 'General Enquiry' ? e.product : 'General Enquiry'}</p>
+                    {e.quantity && <p className="text-xs text-slate-500 mt-1 font-medium">Qty: {e.quantity}</p>}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex justify-center">

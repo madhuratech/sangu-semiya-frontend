@@ -226,25 +226,31 @@ const ContactUs = () => {
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Quantity</label>
                   <div className="flex gap-2">
-                    <input type="number" value={form.quantity} onChange={(e) => setForm({...form, quantity: e.target.value})}
-                      className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
-                      placeholder="e.g. 500" />
-                    <div className="relative w-24 shrink-0">
-  <select
-    value={quantityUnit}
-    onChange={(e) => setQuantityUnit(e.target.value)}
-    className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 pr-7 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
-  >
-    <option value="Gram">Gram</option>
-    <option value="KG">Kg</option>
-  </select>
+  <input
+    type="number"
+    value={form.quantity}
+    onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+    className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+    placeholder="e.g. 500"
+  />
 
-  {/* Small clean arrow */}
-  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500 text-[11px]">
-    ▼
+  {/* Select with custom arrow */}
+  <div className="relative w-24 shrink-0">
+    <select
+      value={quantityUnit}
+      onChange={(e) => setQuantityUnit(e.target.value)}
+      className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 pr-7 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+    >
+      <option value="Gram">Gram</option>
+      <option value="KG">Kg</option>
+    </select>
+
+    {/* Small arrow */}
+    <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500 text-[11px]">
+      ▼
+    </div>
   </div>
 </div>
-                  </div>
                 </div>
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Message</label>

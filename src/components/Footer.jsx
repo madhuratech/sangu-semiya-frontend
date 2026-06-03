@@ -155,6 +155,20 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Google Map Embed */}
+        <div className="mt-10 rounded-2xl overflow-hidden border border-red-400/30 shadow-lg" style={{ height: '220px' }}>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.123!2d76.94!3d11.02!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDAxJzEyLjAiTiA3NsKwNTYnMjQuMCJF!5e0!3m2!1sen!2sin!4v1616161616161!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Sangu Brand Semiya Location"
+          ></iframe>
+        </div>
+
         {/* Bottom Bar */}
        <div className="relative mt-10 pt-5 border-t border-red-500 flex flex-col sm:flex-row items-center justify-center text-center gap-2">
   

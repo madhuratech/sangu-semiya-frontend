@@ -145,15 +145,21 @@ const EnquirySection = ({ trustCards }) => {
                       onChange={(e) => setForm({...form, quantity: e.target.value})}
                       required
                     />
-                    <select
-                      value={quantityUnit}
-                      onChange={(e) => setQuantityUnit(e.target.value)}
-                      className="w-24 shrink-0 bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 font-medium text-xs text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
-                    >
-                      <option value="Gram">Gram</option>
-                      <option value="KG">Kg</option>
-                      
-                    </select>
+                    <div className="relative w-24">
+  <select
+    value={quantityUnit}
+    onChange={(e) => setQuantityUnit(e.target.value)}
+    className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-lg px-2 py-3 pr-6 font-medium text-xs text-slate-900 shadow-sm outline-none cursor-pointer"
+  >
+    <option value="Gram">Gram</option>
+    <option value="KG">Kg</option>
+  </select>
+
+  {/* Custom arrow */}
+  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500">
+    ▼
+  </div>
+</div>
                   </div>
                 </div>
               </div>

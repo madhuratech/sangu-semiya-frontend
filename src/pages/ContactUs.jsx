@@ -111,7 +111,7 @@ const ContactUs = () => {
               {
                 icon: <FiMapPin size={24} />,
                 title: 'Visit Us',
-                lines: ['344 / 3, Periyannan Nagar,', 'Thadagam Road, Tvs Nagar,', 'Coimbatore - 641 025'],
+                lines: ['Vanmathi Semiya Works', '344 / 3, Periyannan Nagar,', 'Thadagam Road, Tvs Nagar,', 'Coimbatore - 641 025'],
                 color: 'from-secondary to-red-700',
               },
               {

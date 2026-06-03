@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiMapPin, FiPhone, FiMail, FiMessageCircle, FiSend, FiClock, FiCheckCircle } from 'react-icons/fi';
+import { FiMapPin, FiPhone, FiMail, FiMessageCircle, FiSend, FiClock, FiCheckCircle, FiChevronDown } from 'react-icons/fi';
 
 const ContactUs = () => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', product: '', quantity: '', message: '' });
@@ -9,6 +9,14 @@ const ContactUs = () => {
   const [touched, setTouched] = useState({ name: false, phone: false, email: false });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://sangu-semiya-backend-bq1f.onrender.com/api';
+    axios.get(`${apiUrl}/products`)
+      .then(res => setProducts(res.data))
+      .catch(err => console.error('Failed to fetch products:', err));
+  }, []);
 
   const validateField = (fieldName, value) => {
     let error = '';
@@ -210,47 +218,48 @@ const ContactUs = () => {
                   </div>
                   <div>
                     <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Product Interest</label>
-                    <select value={form.product} onChange={(e) => setForm({...form, product: e.target.value})}
-                      className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none">
-                      <option value="">Select a product</option>
-                      <option value="Roasted Vermicelli">Roasted Vermicelli</option>
-                      <option value="Ragi Vermicelli">Ragi Vermicelli</option>
-                      <option value="Kambu Vermicelli">Kambu Vermicelli</option>
-                      <option value="Wheat Vermicelli">Wheat Vermicelli</option>
-                      <option value="Veg Noodles">Veg Noodles</option>
-                      <option value="Chinese Noodles">Chinese Noodles</option>
-                      <option value="Samba Wheat Broken">Samba Wheat Broken</option>
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={form.product}
+                        onChange={(e) => setForm({ ...form, product: e.target.value })}
+                        className="w-full appearance-none bg-white border-2 border-yellow-400 focus:border-yellow-500 rounded-xl p-4 pr-10 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+                      >
+                        <option value="">Select a product</option>
+                        {products.map((p) => (
+                          <option key={p.id || p._id} value={p.name}>{p.name}</option>
+                        ))}
+                        <option value="All Products">Combination / All Products</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
+                        <FiChevronDown size={18} strokeWidth={2.5} />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Quantity</label>
                   <div className="flex gap-2">
-  <input
-    type="number"
-    value={form.quantity}
-    onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-    className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
-    placeholder="e.g. 500"
-  />
-
-  {/* Select with custom arrow */}
-  <div className="relative w-24 shrink-0">
-    <select
-      value={quantityUnit}
-      onChange={(e) => setQuantityUnit(e.target.value)}
-      className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 pr-7 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
-    >
-      <option value="Gram">Gram</option>
-      <option value="KG">Kg</option>
-    </select>
-
-    {/* Small arrow */}
-    <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500 text-[11px]">
-      ▼
-    </div>
-  </div>
-</div>
+                    <input
+                      type="number"
+                      value={form.quantity}
+                      onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                      className="flex-1 min-w-0 bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none"
+                      placeholder="e.g. 500"
+                    />
+                    <div className="relative w-24 shrink-0">
+                      <select
+                        value={quantityUnit}
+                        onChange={(e) => setQuantityUnit(e.target.value)}
+                        className="w-full appearance-none bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 pr-8 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
+                      >
+                        <option value="Gram">Gram</option>
+                        <option value="KG">Kg</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-slate-500">
+                        <FiChevronDown size={15} strokeWidth={2.5} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-[13px] uppercase font-medium tracking-widest text-slate-400 mb-2">Your Message</label>

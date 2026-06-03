@@ -113,7 +113,7 @@ const ContactUs = () => {
                 title: 'Visit Us',
                 lines: ['344 / 3, Periyannan Nagar,', 'Thadagam Road, Tvs Nagar,', 'Coimbatore - 641 025'],
                 color: 'from-secondary to-red-700',
-                mapLink: 'https://www.google.com/maps/search/?api=1&query=344+Periyannan+Nagar,+Thadagam+Road,+Tvs+Nagar,+Coimbatore+641025',
+                mapLink: 'https://www.google.com/maps/place/VANMATHI+SEMIYA+WORKS/@11.0449269,76.8835042,14z/data=!4m10!1m2!2m1!1s344+Periyannan+Nagar,+Thadagam+Road,+Tvs+Nagar,+Coimbatore+641025!3m6!1s0x3ba859e99e65332d:0x4a10bd96a1f192ab!8m2!3d11.0449269!4d76.9195531!15sCkEzNDQgUGVyaXlhbm5hbiBOYWdhciwgVGhhZGFnYW0gUm9hZCwgVHZzIE5hZ2FyLCBDb2ltYmF0b3JlIDY0MTAyNZIBEWZvb2RfbWFudWZhY3R1cmVy4AEA!16s%2Fg%2F11z0v6vr34?entry=ttu',
               },
               {
                 icon: <FiPhone size={24} />,

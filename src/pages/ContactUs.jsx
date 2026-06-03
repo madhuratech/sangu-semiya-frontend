@@ -239,7 +239,6 @@ const ContactUs = () => {
                     className="w-full bg-white border border-slate-200 focus:border-primary rounded-xl p-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none resize-none"
                     placeholder="Tell us about your requirements..." />
                 </div>
-                </div>
                 <button type="submit" disabled={isSubmitting} className={`w-full ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-secondary hover:bg-red-700'} text-white py-4 rounded-xl font-medium text-[15px] uppercase tracking-widest shadow-xl transition-all duration-300 flex items-center justify-center gap-2`}>
                   <FiSend size={16} /> {isSubmitting ? 'Submitting Message...' : 'Submit Message'}
                 </button>

@@ -59,8 +59,9 @@ const Footer = () => {
                 className="h-28 w-28 object-contain rounded-full border-4 border-white shadow-lg"
               />
             </div>
-            <h2 className="text-lg font-medium tracking-wide mb-1">
-  Sangu Brand Semiya®
+      <h2 className="text-lg font-medium tracking-wide mb-1">
+  Sangu Brand Semiya
+  <span className="text-xl align-top ml-0.5">®</span>
 </h2>
             <p className="text-sm text-red-100 font-medium">GSTIN : 33ABKPC7067J1ZK</p>
           </div>

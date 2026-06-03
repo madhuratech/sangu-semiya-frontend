@@ -152,8 +152,7 @@ const EnquirySection = ({ trustCards }) => {
                     >
                       <option value="Gram">Gram</option>
                       <option value="KG">KG</option>
-                      <option value="Quintal">Quintal</option>
-                      <option value="Ton">Ton</option>
+                      
                     </select>
                   </div>
                 </div>

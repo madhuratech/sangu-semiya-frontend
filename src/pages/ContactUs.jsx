@@ -235,9 +235,7 @@ const ContactUs = () => {
                       className="w-24 shrink-0 bg-white border border-slate-200 focus:border-primary rounded-xl px-2 py-4 font-medium text-sm text-slate-900 shadow-sm transition-all outline-none cursor-pointer"
                     >
                       <option value="Gram">Gram</option>
-                      <option value="KG">KG</option>
-                      <option value="Quintal">Quintal</option>
-                      <option value="Ton">Ton</option>
+                      <option value="KG">Kg</option>
                     </select>
                   </div>
                 </div>

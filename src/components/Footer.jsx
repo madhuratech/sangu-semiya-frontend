@@ -119,7 +119,7 @@ const Footer = () => {
               <li className="flex items-start gap-2 text-sm text-red-100">
                 <FiMapPin size={16} className="mt-0.5 shrink-0 text-white" />
                 <a
-  href="https://www.google.com/maps/place/VANMATHI+SEMIYA+WORKS/@11.0449269,76.8835042,14z/data=!4m10!1m2!2m1!1s344+Periyannan+Nagar,+Thadagam+Road,+Tvs+Nagar,+Coimbatore+641025!3m6!1s0x3ba859e99e65332d:0x4a10bd96a1f192ab!8m2!3d11.0449269!4d76.9195531!15sCkEzNDQgUGVyaXlhbm5hbiBOYWdhciwgVGhhZGFnYW0gUm9hZCwgVHZzIE5hZ2FyLCBDb2ltYmF0b3JlIDY0MTAyNZIBEWZvb2RfbWFudWZhY3R1cmVy4AEA!16s%2Fg%2F11z0v6vr34?entry=ttu"
+  href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d291.0521220879647!2d76.91931367727692!3d11.044916325767586!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba8590e66568ead%3A0xa00cbb05a5f25bd9!2sSangu%20Brand%20Semiya!5e0!3m2!1sen!2sin!4v1780462428954!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
   target="_blank"
   rel="noopener noreferrer"
   className="text-red-100 hover:text-yellow-400 no-underline hover:no-underline transition-colors duration-300"
